@@ -1,2 +1,3 @@
 PyTelegramBotAPI
 openai
+g4f
