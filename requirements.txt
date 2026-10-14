@@ -2,3 +2,4 @@ PyTelegramBotAPI
 openai
 g4f
 aiogram
+telethon
