@@ -2,3 +2,4 @@ aiogram
 anthropic
 openai
 aiohttp
+aiohttp_cors
