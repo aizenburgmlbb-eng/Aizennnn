@@ -1,11 +1,180 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-    <title>Мое приложение</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Амина — Профиль</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        :root {
+            --bg-color: var(--tg-theme-bg-color, #ffffff);
+            --text-color: var(--tg-theme-text-color, #000000);
+            --hint-color: var(--tg-theme-hint-color, #999999);
+            --button-color: var(--tg-theme-button-color, #2481cc);
+            --button-text: var(--tg-theme-button-text-color, #ffffff);
+            --secondary-bg: var(--tg-theme-secondary-bg-color, #f1f1f1);
+        }
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .card {
+            background-color: var(--secondary-bg);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+        }
+        .avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #2481cc, #a3d0ff);
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: white;
+            font-weight: bold;
+        }
+        .balance {
+            font-size: 32px;
+            font-weight: bold;
+            margin: 10px 0;
+            color: #34c759; /* Зеленый цвет для денег */
+        }
+        .level {
+            font-size: 14px;
+            color: var(--hint-color);
+        }
+        button {
+            background-color: var(--button-color);
+            color: var(--button-text);
+            border: none;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            width: 100%;
+        }
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .loading {
+            text-align: center;
+            color: var(--hint-color);
+            margin-top: 50px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Привет! Это мой Mini App!</h1>
-    <button onclick="Telegram.WebApp.close()">Закрыть приложение</button>
+
+    <div id="app">
+        <div class="loading">Загрузка профиля...</div>
+    </div>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.ready();
+        tg.expand();
+
+        // ЗАМЕНИТЕ ЭТОТ URL НА АДРЕС ВАШЕГО СЕРВЕРА, ГДЕ ЗАПУЩЕН api.py
+        // Если тестируете локально, может быть http://localhost:8080
+        const API_URL = 'https://ваш-сайт.onrender.com'; 
+
+        async function loadProfile() {
+            try {
+                // Отправляем initData на сервер для проверки
+                const response = await fetch(`${API_URL}/api/profile`, {
+                    headers: {
+                        'X-Telegram-Init-Data': tg.initData
+                    }
+                });
+                
+                if (!response.ok) throw new Error('Ошибка сервера');
+                
+                const data = await response.json();
+                renderProfile(data);
+
+            } catch (error) {
+                document.getElementById('app').innerHTML = `
+                    <div class="card" style="color: red;">
+                        Ошибка загрузки: ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        function renderProfile(data) {
+            const initial = data.name.charAt(0).toUpperCase();
+            const vipMark = data.vip ? ' 👑' : '';
+            
+            let dailyButton = '';
+            if (data.daily_available) {
+                dailyButton = `<button onclick="claimDaily()" id="daily-btn">🎁 Забрать бонус (500 msg)</button>`;
+            } else {
+                dailyButton = `<button disabled>🎁 Бонус уже получен</button>`;
+            }
+
+            document.getElementById('app').innerHTML = `
+                <div class="card">
+                    <div class="avatar">${initial}</div>
+                    <h2>${data.name}${vipMark}</h2>
+                    <div class="level">Уровень ${data.level}: ${data.level_title}</div>
+                </div>
+                
+                <div class="card">
+                    <div style="color: var(--hint-color); font-size: 14px;">Ваш баланс</div>
+                    <div class="balance">${data.balance.toLocaleString()} msg</div>
+                </div>
+
+                ${dailyButton}
+            `;
+        }
+
+        async function claimDaily() {
+            const btn = document.getElementById('daily-btn');
+            btn.disabled = true;
+            btn.innerText = 'Получаем...';
+
+            try {
+                const response = await fetch(`${API_URL}/api/daily`, {
+                    method: 'POST',
+                    headers: {
+                        'X-Telegram-Init-Data': tg.initData
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    tg.HapticFeedback.notificationOccurred('success');
+                    tg.showAlert(`Вы получили ${data.amount} msg!\nНовый баланс: ${data.new_balance}`);
+                    // Перезагружаем профиль
+                    loadProfile();
+                } else {
+                    tg.showAlert(data.error || 'Ошибка');
+                    btn.disabled = false;
+                    btn.innerText = '🎁 Забрать бонус';
+                }
+            } catch (e) {
+                tg.showAlert('Ошибка сети');
+                btn.disabled = false;
+                btn.innerText = '🎁 Забрать бонус';
+            }
+        }
+
+        // Стартуем
+        loadProfile();
+    </script>
 </body>
-</html>
+    </html>
