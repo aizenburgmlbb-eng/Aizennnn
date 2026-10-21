@@ -5,7 +5,7 @@ import urllib.parse
 from aiohttp import web
 import sqlite3
 from datetime import datetime, timedelta
-
+import aiohttp_cors
 # Импортируем функции из вашей базы данных
 from database import get_user, get_balance, get_user_level, claim_daily, get_last_daily, add_balance, is_vip_active
 
