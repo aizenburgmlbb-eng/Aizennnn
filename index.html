@@ -8,10 +8,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --text-main: #4A3B32;
-            --text-muted: #8B7D73;
-            --card-bg: rgba(255, 255, 255, 0.85);
-            --accent: #D9734E;
+            --text-main: #3A2A20; /* Темно-коричневый для контраста */
+            --text-muted: #7A6A60;
+            --card-bg: rgba(255, 255, 255, 0.65); /* Полупрозрачный белый */
+            --accent: #D9734E; /* Терракотовый */
             --accent-hover: #C2623E;
         }
 
@@ -21,8 +21,10 @@
             font-family: 'Nunito', sans-serif;
             color: var(--text-main);
             background-color: #FFF7ED;
-            /* Ваш осенний фон */
-            background-image: url('https://i.imgur.com/your_image.jpg'); /* ЗАМЕНИТЕ НА ССЫЛКУ НА ВАШ ФОН */
+            
+            /* !!! ЗАМЕНИТЕ ССЫЛКУ НИЖЕ НА ВАШУ КАРТИНКУ С ЛИСТЬЯМИ !!! */
+            background-image: url('https://images.unsplash.com/photo-1507371341162-763b5e419408?q=80&w=1000&auto=format&fit=crop'); 
+            
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -33,30 +35,31 @@
         .app-container {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 14px;
             max-width: 500px;
             margin: 0 auto;
+            padding-bottom: 30px;
         }
 
-        /* Эффект стекла для карточек */
+        /* ЭФФЕКТ МАТОВОГО СТЕКЛА */
         .card {
             background: var(--card-bg);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 16px;
-            box-shadow: 0 4px 15px rgba(217, 115, 78, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            animation: slideUp 0.4s ease-out forwards;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 24px;
+            padding: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 8px 32px rgba(217, 115, 78, 0.15);
+            animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
             opacity: 0;
-            transform: translateY(10px);
+            transform: translateY(20px);
         }
 
-        /* Задержки для анимации */
         .card:nth-child(1) { animation-delay: 0.05s; }
         .card:nth-child(2) { animation-delay: 0.1s; }
         .card:nth-child(3) { animation-delay: 0.15s; }
         .card:nth-child(4) { animation-delay: 0.2s; }
+        .card:nth-child(5) { animation-delay: 0.25s; }
 
         @keyframes slideUp {
             to { opacity: 1; transform: translateY(0); }
@@ -66,82 +69,85 @@
         .profile-header {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 16px;
         }
 
         .avatar {
-            width: 64px;
-            height: 64px;
+            width: 72px;
+            height: 72px;
             border-radius: 50%;
             background: linear-gradient(135deg, #F3A183, #D9734E);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 26px;
+            font-size: 28px;
             font-weight: 800;
             color: white;
-            border: 3px solid #FFF;
-            box-shadow: 0 2px 10px rgba(217, 115, 78, 0.3);
+            border: 2px solid #FFF;
+            box-shadow: 0 0 15px rgba(217, 115, 78, 0.4);
             flex-shrink: 0;
+            overflow: hidden; /* Обрезаем фото по кругу */
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .user-info h2 {
             margin: 0 0 4px 0;
-            font-size: 20px;
+            font-size: 22px;
             font-weight: 800;
+            letter-spacing: -0.5px;
             display: flex;
             align-items: center;
             gap: 6px;
         }
 
-        .user-info .level {
+        .level {
             font-size: 13px;
             color: var(--text-muted);
             font-weight: 600;
+            margin-bottom: 6px;
         }
 
         .status-badge {
             display: inline-block;
             background: rgba(217, 115, 78, 0.15);
             color: var(--accent);
-            padding: 2px 8px;
-            border-radius: 10px;
+            padding: 4px 10px;
+            border-radius: 12px;
             font-size: 12px;
-            font-weight: 600;
-            margin-top: 4px;
+            font-weight: 800;
         }
 
         /* Финансы */
         .finance-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
+            gap: 12px;
         }
 
         .finance-item {
             text-align: center;
-            padding: 10px;
-            background: rgba(255, 255, 255, 0.6);
-            border-radius: 14px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.6);
         }
 
         .finance-label {
-            font-size: 12px;
+            font-size: 13px;
             color: var(--text-muted);
-            margin-bottom: 4px;
-            font-weight: 600;
+            margin-bottom: 6px;
+            font-weight: 800;
         }
 
         .finance-value {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 800;
             color: var(--text-main);
-        }
-
-        .finance-sub {
-            font-size: 11px;
-            color: var(--text-muted);
-            margin-top: 2px;
         }
 
         /* Статистика (Топ, Реп) */
@@ -154,32 +160,36 @@
 
         .stat-item {
             flex: 1;
+            border-right: 1px solid rgba(0,0,0,0.05);
         }
+        .stat-item:last-child { border-right: none; }
 
         .stat-value {
-            font-size: 20px;
+            font-size: 22px;
             font-weight: 800;
+            color: var(--accent);
         }
 
         .stat-label {
             font-size: 12px;
             color: var(--text-muted);
-            font-weight: 600;
+            font-weight: 800;
+            margin-top: 4px;
         }
 
         /* Кнопка Daily */
         .btn-daily {
             width: 100%;
-            padding: 16px;
+            padding: 18px;
             background: var(--accent);
             color: white;
             border: none;
-            border-radius: 16px;
+            border-radius: 18px;
             font-size: 16px;
             font-weight: 800;
             font-family: inherit;
             cursor: pointer;
-            box-shadow: 0 4px 12px rgba(217, 115, 78, 0.3);
+            box-shadow: 0 6px 20px rgba(217, 115, 78, 0.4);
             transition: transform 0.1s, background 0.2s;
             display: flex;
             justify-content: center;
@@ -193,8 +203,7 @@
         }
 
         .btn-daily:disabled {
-            background: #D1C8C3;
-            color: #FFF;
+            background: #C4B6B0;
             box-shadow: none;
             cursor: not-allowed;
         }
@@ -206,31 +215,31 @@
         
         .progress-bar-bg {
             width: 100%;
-            height: 12px;
-            background: rgba(0,0,0,0.05);
+            height: 14px;
+            background: rgba(0,0,0,0.06);
             border-radius: 10px;
             overflow: hidden;
-            margin: 8px 0;
+            margin: 10px 0 4px;
         }
 
         .progress-bar-fill {
             height: 100%;
             background: var(--accent);
             border-radius: 10px;
-            transition: width 0.3s;
+            transition: width 0.5s ease-out;
         }
 
         /* Питомец */
         .pet-card {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 16px;
         }
-        .pet-emoji { font-size: 32px; }
-        .pet-details h4 { margin: 0; font-size: 15px; }
-        .pet-details p { margin: 2px 0 0; font-size: 12px; color: var(--text-muted); }
+        .pet-emoji { font-size: 36px; }
+        .pet-details h4 { margin: 0 0 4px; font-size: 16px; font-weight: 800; }
+        .pet-details p { margin: 0; font-size: 13px; color: var(--text-muted); font-weight: 600; }
 
-        .loading { text-align: center; margin-top: 50px; font-weight: 600; color: var(--text-main); }
+        .loading { text-align: center; margin-top: 50px; font-weight: 800; color: #FFF; text-shadow: 0 2px 4px rgba(0,0,0,0.5); font-size: 18px;}
     </style>
 </head>
 <body>
@@ -259,8 +268,8 @@
 
             } catch (error) {
                 document.getElementById('app').innerHTML = `
-                    <div class="card" style="color: var(--accent); text-align: center;">
-                        Ошибка загрузки: ${error.message}
+                    <div class="card" style="text-align: center; color: #D9734E;">
+                        <b>Ошибка загрузки:</b><br>${error.message}
                     </div>
                 `;
             }
@@ -268,6 +277,12 @@
 
         function renderProfile(data) {
             const initial = data.name.charAt(0).toUpperCase();
+            
+            // Аватарка (фото или буква)
+            let avatarContent = `<span>${initial}</span>`;
+            if (data.avatar_url) {
+                avatarContent = `<img src="${data.avatar_url}" alt="avatar">`;
+            }
             
             // Блок брака
             let marriageHtml = '';
@@ -296,14 +311,13 @@
             if (data.daily_available) {
                 dailyHtml = `<button class="btn-daily" onclick="claimDaily()" id="daily-btn">🎁 Забрать 500 msg</button>`;
             } else {
-                // Прогресс бар для ожидания
                 const totalHours = 24;
                 const left = data.daily_hours_left;
                 const percent = ((totalHours - left) / totalHours) * 100;
                 dailyHtml = `
                     <div class="card daily-progress-container">
-                        <div style="font-weight: 600; font-size: 14px;">🎁 Следующий бонус</div>
-                        <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">через ${left} ч.</div>
+                        <div style="font-weight: 800; font-size: 15px;">🎁 Следующий бонус</div>
+                        <div style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">через ${left} ч.</div>
                         <div class="progress-bar-bg">
                             <div class="progress-bar-fill" style="width: ${percent}%"></div>
                         </div>
@@ -316,7 +330,7 @@
             document.getElementById('app').innerHTML = `
                 <!-- Шапка -->
                 <div class="card profile-header">
-                    <div class="avatar">${initial}</div>
+                    <div class="avatar">${avatarContent}</div>
                     <div class="user-info">
                         <h2>${data.name}${vipMark}</h2>
                         <div class="level">Уровень ${data.level}: ${data.level_title}</div>
@@ -342,7 +356,7 @@
                 <div class="card stats-row">
                     <div class="stat-item">
                         <div class="stat-value">#${data.rank}</div>
-                        <div class="stat-label">🏆 Место в топе</div>
+                        <div class="stat-label">🏆 Топ</div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-value">${data.rep}</div>
@@ -364,6 +378,8 @@
 
         async function claimDaily() {
             const btn = document.getElementById('daily-btn');
+            if(!btn) return;
+            
             btn.disabled = true;
             btn.innerText = 'Получаем...';
 
@@ -377,7 +393,7 @@
                 
                 if (data.success) {
                     tg.HapticFeedback.notificationOccurred('success');
-                    tg.showAlert(`Вы получили ${data.amount} msg!\nНовый баланс: ${data.new_balance}`);
+                    tg.showAlert(`Вы получили ${data.amount} msg!\\nНовый баланс: ${data.new_balance}`);
                     loadProfile(); // Обновляем экран
                 } else {
                     tg.showAlert(data.error || 'Ошибка');
