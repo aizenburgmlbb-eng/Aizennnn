@@ -53,7 +53,6 @@
 
         @keyframes slideUp { to { opacity: 1; transform: translateY(0); } }
 
-        /* ШАПКА ПРОФИЛЯ */
         .profile-header { display: flex; align-items: center; justify-content: space-between; }
         .avatar {
             width: 100px; height: 100px; border-radius: 50%;
@@ -74,20 +73,17 @@
             margin-top: 4px; margin-left: 4px;
         }
 
-        /* Финансы */
         .finance-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .finance-item { text-align: center; padding: 12px; background: rgba(255, 255, 255, 0.6); border-radius: 16px; }
         .finance-label { font-size: 14px; color: var(--text-muted); margin-bottom: 4px; font-weight: 800; }
         .finance-value { font-size: 22px; font-weight: 800; }
 
-        /* Статистика */
         .stats-row { display: flex; justify-content: space-around; text-align: center; }
         .stat-item { flex: 1; border-right: 1px solid rgba(0,0,0,0.05); }
         .stat-item:last-child { border-right: none; }
         .stat-value { font-size: 22px; font-weight: 800; color: var(--accent); }
         .stat-label { font-size: 13px; color: var(--text-muted); font-weight: 800; }
 
-        /* Кнопки */
         .btn {
             width: 100%; padding: 16px; background: var(--accent); color: white;
             border: none; border-radius: 16px; font-size: 16px; font-weight: 800;
@@ -100,11 +96,9 @@
         .progress-bar-bg { width: 100%; height: 12px; background: rgba(0,0,0,0.06); border-radius: 10px; overflow: hidden; margin-top: 8px; }
         .progress-bar-fill { height: 100%; background: var(--accent); border-radius: 10px; }
 
-        /* Питомец */
         .pet-card { display: flex; align-items: center; gap: 12px; }
         .pet-emoji { font-size: 32px; }
 
-        /* НИЖНЕЕ МЕНЮ */
         .bottom-nav {
             position: fixed; bottom: 0; left: 0; right: 0;
             background: rgba(255, 255, 255, 0.9);
@@ -121,23 +115,21 @@
         .nav-btn.active { color: var(--accent); }
         .nav-btn span.icon { font-size: 24px; }
 
-        /* VIP и Кейсы */
         .item-card {
             display: flex; justify-content: space-between; align-items: center;
             padding: 14px; background: rgba(255, 255, 255, 0.6); border-radius: 16px;
             margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.8);
+            text-decoration: none; color: inherit;
         }
         .item-info h4 { margin: 0 0 4px; font-size: 16px; }
         .item-info p { margin: 0; font-size: 13px; color: var(--text-muted); }
 
-        /* Топ */
         .top-item { display: flex; align-items: center; gap: 12px; padding: 10px; border-bottom: 1px solid rgba(0,0,0,0.05); }
         .top-item:last-child { border-bottom: none; }
-        .top-avatar { width: 40px; height: 40px; border-radius: 50%; background: #ccc; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .top-avatar { width: 40px; height: 40px; border-radius: 50%; background: #ccc; display: flex; align-items: center; justify-content: center; overflow: hidden; font-weight: 800; color: #fff; }
         .top-avatar img { width: 100%; height: 100%; object-fit: cover; }
-        .top-place { font-weight: 800; font-size: 18px; width: 30px; text-align: center; }
-        
-        /* Оверлей для анимаций */
+        .top-place { font-weight: 800; font-size: 18px; width: 30px; text-align: center; color: var(--accent); }
+
         .modal-overlay {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
@@ -176,11 +168,11 @@
             <h2 style="margin-top:0;">🎰 Казино</h2>
             <p style="font-size:14px; color:var(--text-muted);">Мин. ставка: 1000 msg</p>
             <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; justify-content: center;">
-                <button class="btn casino-btn" onclick="playCasino(1000)" style="width: 30%; padding: 10px; font-size: 14px;">1000</button>
-                <button class="btn casino-btn" onclick="playCasino(5000)" style="width: 30%; padding: 10px; font-size: 14px;">5000</button>
-                <button class="btn casino-btn" onclick="playCasino(10000)" style="width: 30%; padding: 10px; font-size: 14px;">10000</button>
-                <button class="btn casino-btn" onclick="playCasino(50000)" style="width: 45%; padding: 10px; font-size: 14px;">50 000</button>
-                <button class="btn casino-btn" onclick="playCasino(100000)" style="width: 45%; padding: 10px; font-size: 14px;">100 000</button>
+                <button class="btn casino-btn" onclick="playCasino(1000, this)" style="width: 30%; padding: 10px; font-size: 14px;">1000</button>
+                <button class="btn casino-btn" onclick="playCasino(5000, this)" style="width: 30%; padding: 10px; font-size: 14px;">5000</button>
+                <button class="btn casino-btn" onclick="playCasino(10000, this)" style="width: 30%; padding: 10px; font-size: 14px;">10000</button>
+                <button class="btn casino-btn" onclick="playCasino(50000, this)" style="width: 45%; padding: 10px; font-size: 14px;">50 000</button>
+                <button class="btn casino-btn" onclick="playCasino(100000, this)" style="width: 45%; padding: 10px; font-size: 14px;">100 000</button>
             </div>
         </div>
     </div>
@@ -193,15 +185,15 @@
             <div id="stars-list"></div>
         </div>
 
-        <div class="card links">
+        <div class="card">
             <h2 style="margin-top:0;">🔗 Полезные ссылки</h2>
-            <a href="https://t.me/Amina_updates" target="_blank" class="item-card" style="text-decoration:none; color:inherit;">
+            <a href="https://t.me/Amina_updates" target="_blank" class="item-card">
                 <div class="item-info"><h4>📢 Канал с новостями</h4></div>
             </a>
-            <a href="https://t.me/chat_games_Gojo" target="_blank" class="item-card" style="text-decoration:none; color:inherit;">
+            <a href="https://t.me/chat_games_Gojo" target="_blank" class="item-card">
                 <div class="item-info"><h4>💬 Наша группа</h4></div>
             </a>
-            <a href="https://t.me/Kaoruko_off" target="_blank" class="item-card" style="text-decoration:none; color:inherit;">
+            <a href="https://t.me/Kaoruko_off" target="_blank" class="item-card">
                 <div class="item-info"><h4>👑 Владелец бота</h4></div>
             </a>
         </div>
@@ -217,4 +209,430 @@
 
     <!-- МОДАЛЬНОЕ ОКНО ДЛЯ АНИМАЦИЙ -->
     <div id="modal" class="modal-overlay">
-        <div class="modal
+        <div class="modal-content">
+            <h3 id="modal-title" style="margin-top:0;">Крутим...</h3>
+            <div id="modal-body" class="case-grid"></div>
+            <p id="modal-desc" style="font-weight: 600;"></p>
+            <button id="modal-btn" class="btn" style="display:none; margin-top: 10px;" onclick="closeModal()">ОК</button>
+        </div>
+    </div>
+
+    <!-- НИЖНЕЕ МЕНЮ -->
+    <div class="bottom-nav">
+        <button class="nav-btn active" onclick="switchTab('profile', this)">
+            <span class="icon">👤</span> Профиль
+        </button>
+        <button class="nav-btn" onclick="switchTab('games', this)">
+            <span class="icon">🎮</span> Игры
+        </button>
+        <button class="nav-btn" onclick="switchTab('shop', this)">
+            <span class="icon">🛒</span> Магазин
+        </button>
+        <button class="nav-btn" onclick="switchTab('top', this)">
+            <span class="icon">🏆</span> Топ
+        </button>
+    </div>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.ready();
+        tg.expand();
+
+        const API_URL = 'https://bot-1792298312-5363-ayzen.bothost.tech';
+        let userBalance = 0;
+        let cooldownTimer = null;
+
+        function switchTab(tabId, btn) {
+            document.querySelectorAll('.app-container').forEach(el => el.style.display = 'none');
+            document.getElementById(`screen-${tabId}`).style.display = 'flex';
+            document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+            btn.classList.add('active');
+            
+            if(tabId === 'games' || tabId === 'shop') renderShop(); 
+            if(tabId === 'top') loadTop();
+        }
+
+        async function loadProfile() {
+            try {
+                const response = await fetch(`${API_URL}/api/profile`, {
+                    headers: { 'X-Telegram-Init-Data': tg.initData }
+                });
+                if (!response.ok) throw new Error('Ошибка сервера');
+                const data = await response.json();
+                
+                userBalance = data.balance;
+                renderProfile(data);
+                renderShop(); 
+
+            } catch (error) {
+                document.getElementById('screen-profile').innerHTML = `
+                    <div class="card" style="text-align: center; color: #D9734E;">
+                        <b>Ошибка загрузки:</b><br>${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        function renderProfile(data) {
+            const initial = data.name.charAt(0).toUpperCase();
+            let avatarContent = `<span>${initial}</span>`;
+            if (data.avatar_url) avatarContent = `<img src="${data.avatar_url}" alt="avatar">`;
+            
+            let vipLine = data.vip ? `<div class="status-badge" style="background:#FFD700; color:#000;">👑 VIP: ${data.vip_days} дн.</div>` : '';
+            let idLine = `<div class="status-badge" style="background:rgba(0,0,0,0.05); color:var(--text-muted);">ID: ${data.user_id}</div>`;
+            
+            let marriageHtml = data.spouse 
+                ? `<div class="status-badge" style="margin-top:4px;">💍 В браке с ${data.spouse}</div>`
+                : `<div class="status-badge" style="margin-top:4px; background: rgba(0,0,0,0.05); color: var(--text-muted);">💔 Свободен(на)</div>`;
+
+            let petHtml = '';
+            if (data.pet) {
+                petHtml = `
+                    <div class="card pet-card">
+                        <div class="pet-emoji">${data.pet.emoji}</div>
+                        <div>
+                            <h4 style="margin:0 0 4px;">${data.pet.name}</h4>
+                            <p style="margin:0; font-size:13px; color:var(--text-muted);">Настроение: ${data.pet.mood}/100</p>
+                        </div>
+                    </div>
+                `;
+            }
+
+            let dailyHtml = '';
+            if (data.daily_available) {
+                dailyHtml = `<button class="btn" onclick="claimDaily()" id="daily-btn">🎁 Забрать 500 msg</button>`;
+            } else {
+                const percent = ((24 - data.daily_hours_left) / 24) * 100;
+                dailyHtml = `
+                    <div class="card" style="text-align: center;">
+                        <div style="font-weight: 800; font-size: 16px;">🎁 Следующий бонус</div>
+                        <div style="font-size: 14px; color: var(--text-muted); margin-top: 4px;">через ${data.daily_hours_left} ч.</div>
+                        <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: ${percent}%"></div></div>
+                    </div>
+                `;
+            }
+
+            document.getElementById('screen-profile').innerHTML = `
+                <div class="card profile-header">
+                    <div class="avatar">${avatarContent}</div>
+                    <div class="user-info">
+                        <h2>${data.name}</h2>
+                        <div class="level">Уровень ${data.level}: ${data.level_title}</div>
+                        <div>${idLine} ${vipLine}</div>
+                        ${marriageHtml}
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="finance-grid">
+                        <div class="finance-item">
+                            <div class="finance-label">👛 Кошелек</div>
+                            <div class="finance-value">${data.balance.toLocaleString()}</div>
+                        </div>
+                        <div class="finance-item">
+                            <div class="finance-label">🏦 Банк</div>
+                            <div class="finance-value">${data.bank_balance.toLocaleString()}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card stats-row">
+                    <div class="stat-item">
+                        <div class="stat-value">#${data.rank}</div>
+                        <div class="stat-label">🏆 Топ</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">${data.rep}</div>
+                        <div class="stat-label">⭐ Репутация</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">${data.streak}/7</div>
+                        <div class="stat-label">🔥 Стрик</div>
+                    </div>
+                </div>
+
+                ${petHtml}
+                ${dailyHtml}
+            `;
+        }
+
+        function renderShop() {
+            // VIP
+            document.getElementById('vip-list').innerHTML = `
+                <div class="card">
+                    <div class="item-card">
+                        <div class="item-info"><h4>1 неделя</h4><p>2 000 msg</p></div>
+                        <button class="btn" style="width: auto; padding: 8px 16px; font-size: 14px;" onclick="buyVip(1)">Купить</button>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-info"><h4>2 недели</h4><p>4 000 msg</p></div>
+                        <button class="btn" style="width: auto; padding: 8px 16px; font-size: 14px;" onclick="buyVip(2)">Купить</button>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-info"><h4>3 недели</h4><p>6 000 msg</p></div>
+                        <button class="btn" style="width: auto; padding: 8px 16px; font-size: 14px;" onclick="buyVip(3)">Купить</button>
+                    </div>
+                </div>
+            `;
+
+            // Кейсы
+            const cases = [
+                {id: "case", name: "🎁 Обычный", price: 1000},
+                {id: "rarecase", name: "💎 Редкий", price: 5000},
+                {id: "lcase", name: "👑 Легендарный", price: 25000},
+                {id: "petcase", name: "🐾 Питомец", price: 2500},
+                {id: "petrarecase", name: "🐾 Редкий питомец", price: 5000},
+                {id: "weddingcase", name: "💍 Свадебный", price: 0},
+            ];
+            
+            let casesHtml = '<div class="card">';
+            cases.forEach(c => {
+                casesHtml += `
+                    <div class="item-card">
+                        <div class="item-info"><h4>${c.name}</h4><p>${c.price > 0 ? c.price.toLocaleString() + ' msg' : 'Бесплатно'}</p></div>
+                        <button class="btn" style="width: auto; padding: 8px 16px; font-size: 14px;" onclick="openCase('${c.id}')">Открыть</button>
+                    </div>
+                `;
+            });
+            casesHtml += '</div>';
+            document.getElementById('cases-list').innerHTML = casesHtml;
+
+            // Stars (оставили 1, 5, 100, 200, 500, 1000)
+            const starsPkgs = [
+                {msg: "1 000", stars: 1}, {msg: "5 000", stars: 5},
+                {msg: "110 000", stars: 100}, {msg: "230 000", stars: 200},
+                {msg: "600 000", stars: 500}, {msg: "1 000 000", stars: 1000}
+            ];
+            let starsHtml = '';
+            starsPkgs.forEach(p => {
+                starsHtml += `
+                    <div class="item-card" onclick="buyStars(${p.stars})">
+                        <div class="item-info"><h4>${p.msg} msg</h4></div>
+                        <div style="font-weight: 800; color: #e6a817;">${p.stars} ⭐</div>
+                    </div>
+                `;
+            });
+            document.getElementById('stars-list').innerHTML = starsHtml;
+        }
+
+        async function loadTop() {
+            document.getElementById('top-list').innerHTML = '<div style="text-align:center; padding:20px;">Загрузка топа... 🏆</div>';
+            try {
+                const response = await fetch(`${API_URL}/api/top`, {
+                    headers: { 'X-Telegram-Init-Data': tg.initData }
+                });
+                const data = await response.json();
+                
+                let html = '';
+                data.forEach(item => {
+                    let av = item.avatar ? `<img src="${item.avatar}">` : item.name.charAt(0).toUpperCase();
+                    let medal = item.place === 1 ? '🥇' : item.place === 2 ? '🥈' : item.place === 3 ? '🥉' : item.place;
+                    html += `
+                        <div class="top-item">
+                            <div class="top-place">${medal}</div>
+                            <div class="top-avatar">${av}</div>
+                            <div style="flex-grow:1; font-weight: 600;">${item.name}</div>
+                            <div style="font-weight: 800; color: var(--accent);">${item.balance.toLocaleString()}</div>
+                        </div>
+                    `;
+                });
+                document.getElementById('top-list').innerHTML = html;
+            } catch(e) {
+                document.getElementById('top-list').innerHTML = '<div style="color:red; text-align:center;">Ошибка загрузки</div>';
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        async function claimDaily() {
+            const btn = document.getElementById('daily-btn');
+            if(!btn) return;
+            btn.disabled = true;
+            btn.innerText = 'Получаем...';
+
+            try {
+                const response = await fetch(`${API_URL}/api/daily`, {
+                    method: 'POST',
+                    headers: { 'X-Telegram-Init-Data': tg.initData }
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    tg.HapticFeedback.notificationOccurred('success');
+                    tg.showAlert(`Вы получили ${data.amount} msg!\nНовый баланс: ${data.new_balance}`);
+                    loadProfile(); 
+                } else {
+                    tg.showAlert(data.error || 'Ошибка');
+                    btn.disabled = false;
+                    btn.innerText = '🎁 Забрать 500 msg';
+                }
+            } catch (e) {
+                tg.showAlert('Ошибка сети');
+                btn.disabled = false;
+                btn.innerText = '🎁 Забрать 500 msg';
+            }
+        }
+
+        async function buyVip(weeks) {
+            tg.HapticFeedback.impactOccurred('medium');
+            try {
+                const response = await fetch(`${API_URL}/api/buy_vip`, {
+                    method: 'POST',
+                    headers: { 'X-Telegram-Init-Data': tg.initData, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ weeks: weeks })
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    tg.HapticFeedback.notificationOccurred('success');
+                    tg.showAlert(`👑 VIP куплен на ${weeks} нед.!\nБаланс: ${data.new_balance} msg`);
+                    loadProfile(); 
+                    switchTab('profile', document.querySelectorAll('.nav-btn')[0]); 
+                } else {
+                    tg.showAlert(data.error || 'Ошибка');
+                }
+            } catch (e) { tg.showAlert('Ошибка сети'); }
+        }
+
+        async function openCase(caseId) {
+            tg.HapticFeedback.impactOccurred('medium');
+            const modal = document.getElementById('modal');
+            const title = document.getElementById('modal-title');
+            const body = document.getElementById('modal-body');
+            const desc = document.getElementById('modal-desc');
+            const btn = document.getElementById('modal-btn');
+            
+            modal.style.display = 'flex';
+            title.innerText = 'Крутим кейс...';
+            desc.innerText = '';
+            btn.style.display = 'none';
+            
+            const emojis = ['🎁', '🔥', '👋', '🎀', '👜', '👛', '🤑', '🤩', '🥳', '💎', '💰', '🏆', '⭐', '🎰', '👑'];
+            let spinInterval = setInterval(() => {
+                let line = [];
+                for(let i=0; i<9; i++) line.push(emojis[Math.floor(Math.random() * emojis.length)]);
+                body.innerHTML = `<div>${line[0]} ${line[1]} ${line[2]}</div><div>${line[3]} ${line[4]} ${line[5]}</div><div>${line[6]} ${line[7]} ${line[8]}</div>`;
+            }, 100);
+
+            try {
+                const response = await fetch(`${API_URL}/api/open_case`, {
+                    method: 'POST',
+                    headers: { 'X-Telegram-Init-Data': tg.initData, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ case_key: caseId })
+                });
+                const data = await response.json();
+                
+                setTimeout(() => {
+                    clearInterval(spinInterval);
+                    if (data.success) {
+                        tg.HapticFeedback.notificationOccurred('success');
+                        title.innerText = '🎉 Результат!';
+                        body.innerHTML = '✨';
+                        desc.innerHTML = data.result_text.replace(/\n/g, '<br>');
+                        userBalance = data.new_balance;
+                        loadProfile();
+                    } else {
+                        title.innerText = '❌ Ошибка';
+                        body.innerHTML = '😢';
+                        desc.innerText = data.error;
+                    }
+                    btn.style.display = 'block';
+                }, 2000);
+
+            } catch (e) {
+                clearInterval(spinInterval);
+                title.innerText = '❌ Ошибка сети';
+                btn.style.display = 'block';
+            }
+        }
+
+        async function playCasino(bet, btnElement) {
+            tg.HapticFeedback.impactOccurred('medium');
+            btnElement.disabled = true; // Блокируем кнопку
+
+            const modal = document.getElementById('modal');
+            const title = document.getElementById('modal-title');
+            const body = document.getElementById('modal-body');
+            const desc = document.getElementById('modal-desc');
+            const btn = document.getElementById('modal-btn');
+            
+            modal.style.display = 'flex';
+            title.innerText = '🎰 Крутим...';
+            desc.innerText = '';
+            btn.style.display = 'none';
+            body.classList.add('casino-slots');
+            
+            const slots = ["🍒", "🍋", "🍊", "⭐", "💎", "7️⃣"];
+            let spinInterval = setInterval(() => {
+                body.innerHTML = `<span>${slots[Math.floor(Math.random()*6)]}</span> | <span>${slots[Math.floor(Math.random()*6)]}</span> | <span>${slots[Math.floor(Math.random()*6)]}</span>`;
+            }, 100);
+
+            try {
+                const response = await fetch(`${API_URL}/api/casino`, {
+                    method: 'POST',
+                    headers: { 'X-Telegram-Init-Data': tg.initData, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ bet: bet })
+                });
+                const data = await response.json();
+                
+                setTimeout(() => {
+                    clearInterval(spinInterval);
+                    body.classList.remove('casino-slots');
+                    if (data.success) {
+                        const [a,b,c] = data.result;
+                        body.innerHTML = `<div style="font-size:40px;">${a} | ${b} | ${c}</div>`;
+                        
+                        if (data.win_amount > 0) {
+                            tg.HapticFeedback.notificationOccurred('success');
+                            title.innerText = data.is_jackpot ? '🎉 ДЖЕКПОТ!' : '🎉 Победа!';
+                            desc.innerHTML = `Ставка: ${bet}<br>Множитель: x${data.mult}<br>Выигрыш: <b style="color:green;">+${data.win_amount}</b> msg`;
+                        } else {
+                            title.innerText = '😢 Проигрыш';
+                            desc.innerHTML = `Ставка: ${bet}<br>Потеряно: <b style="color:red;">-${bet}</b> msg`;
+                        }
+                        userBalance = data.new_balance;
+                        loadProfile();
+                    } else {
+                        title.innerText = '⏳ Ожидание';
+                        body.innerHTML = '⏳';
+                        desc.innerText = data.error;
+                    }
+                    btn.style.display = 'block';
+                }, 2000);
+
+            } catch (e) {
+                clearInterval(spinInterval);
+                title.innerText = '❌ Ошибка сети';
+                btn.style.display = 'block';
+            }
+        }
+
+        async function buyStars(stars) {
+            tg.HapticFeedback.impactOccurred('medium');
+            try {
+                const response = await fetch(`${API_URL}/api/buy_stars`, {
+                    method: 'POST',
+                    headers: { 'X-Telegram-Init-Data': tg.initData, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ stars: stars })
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    tg.openInvoice(data.link, (status) => {
+                        if (status === 'paid') {
+                            tg.HapticFeedback.notificationOccurred('success');
+                            setTimeout(() => loadProfile(), 2000); // Ждем начисления от бота
+                        }
+                    });
+                } else {
+                    tg.showAlert(data.error || 'Ошибка');
+                }
+            } catch (e) { tg.showAlert('Ошибка сети'); }
+        }
+
+        loadProfile();
+    </script>
+</body>
+    </html>
