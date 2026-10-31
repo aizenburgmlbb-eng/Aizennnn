@@ -96,7 +96,7 @@ count_rewards_24h, mark_referral_rewarded, get_referral_stats,
     WARN_LIMIT, WARN_BAN_DAYS,
 )
 
-TOKEN = "8572154161:AAFLLxcagDzZYyvWrFBMhbkYdROxktSy8wo"
+TOKEN = "8572154161:AAFFCotXoo6S9wOBhmSgZzvPh_PTX3V7YmU"
 
 AI_LIMIT_NORMAL = 10
 AI_LIMIT_VIP = 20
