@@ -20,7 +20,7 @@ from air import (
     BUY_PACKAGES, _db_backup_loop,
 )
 
-BOT_TOKEN = "8572154161:AAFLLxcagDzZYyvWrFBMhbkYdROxktSy8wo"
+BOT_TOKEN = "8572154161:AAFFCotXoo6S9wOBhmSgZzvPh_PTX3V7YmU"
 
 # ─── ВАЛИДАЦИЯ MINI APP ───
 def validate_init_data(init_data: str) -> dict:
