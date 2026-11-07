@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
+            /* Светлая тема */
             --text-main: #1C1C1E;
             --text-muted: #636366;
             --card-bg: rgba(255, 255, 255, 0.4); 
@@ -20,6 +21,7 @@
         }
 
         body[data-theme="dark"] {
+            /* Тёмная тема */
             --text-main: #FFFFFF;
             --text-muted: #EBEBF5;
             --card-bg: rgba(30, 30, 40, 0.4); 
@@ -39,25 +41,21 @@
             background-size: cover; background-position: center; background-attachment: fixed;
             min-height: 100vh; box-sizing: border-box;
             transition: color 0.3s ease;
-            overflow-x: hidden; /* Скрываем вылезание за экран при анимации */
+            overflow-x: hidden;
         }
 
-        /* Контейнер для анимации свайпа */
-        .screen-wrapper {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            max-width: 500px;
-            margin: 0 auto;
-            transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease;
+        /* Плавное появление контента */
+        .app-container { 
+            display: flex; flex-direction: column; gap: 15px; max-width: 500px; margin: 0 auto; 
+            animation: fadeIn 0.3s ease-out forwards; 
         }
 
-        /* Анимации */
-        .slide-in-right { transform: translateX(30px); opacity: 0; }
-        .slide-in-left { transform: translateX(-30px); opacity: 0; }
-        .slide-out-right { transform: translateX(30px); opacity: 0; }
-        .slide-out-left { transform: translateX(-30px); opacity: 0; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
+        /* iOS Стекло */
         .card {
             background: var(--card-bg); 
             backdrop-filter: blur(25px); 
@@ -169,28 +167,19 @@
         .rules-content { padding: 0 15px; max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out, padding 0.3s ease; font-size: 14px; line-height: 1.5; color: var(--text-muted); }
         .rules-content.open { max-height: 800px; padding: 15px; border-top: 1px solid var(--card-border); }
 
-        .theme-switch-container {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 15px; background: rgba(255,255,255,0.1); border-radius: 16px;
-            border: 1px solid var(--card-border); margin-top: 10px;
-        }
+        .theme-switch-container { display: flex; align-items: center; justify-content: space-between; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 16px; border: 1px solid var(--card-border); margin-top: 10px; }
         .theme-switch-container h4 { margin: 0; font-size: 16px; }
-        .theme-btn {
-            background: var(--card-bg); border: 1px solid var(--card-border);
-            padding: 10px 20px; border-radius: 12px; font-weight: 800; font-size: 16px;
-            color: var(--text-main); cursor: pointer; transition: transform 0.2s;
-        }
+        .theme-btn { background: var(--card-bg); border: 1px solid var(--card-border); padding: 10px 20px; border-radius: 12px; font-weight: 800; font-size: 16px; color: var(--text-main); cursor: pointer; transition: transform 0.2s; }
         .theme-btn:active { transform: scale(0.95); }
     </style>
 </head>
 <body data-theme="dark">
     
-    <!-- Все экраны обернуты в app-container -->
-    <div id="screen-profile" class="app-container screen-wrapper">
+    <div id="screen-profile" class="app-container">
         <div style="color:var(--text-muted); text-align:center; margin-top:50px; font-weight: 800;">Загрузка... 🍂</div>
     </div>
     
-    <div id="screen-games" class="app-container screen-wrapper" style="display: none;">
+    <div id="screen-games" class="app-container" style="display: none;">
         <div class="card" style="text-align: center;"><h2 style="margin-top:0;">👑 VIP Подписка</h2></div>
         <div id="vip-list"></div>
         <div class="card" style="text-align: center; margin-top: 10px;"><h2 style="margin-top:0;">🎁 Кейсы</h2></div>
@@ -207,12 +196,12 @@
         </div>
     </div>
     
-    <div id="screen-top" class="app-container screen-wrapper" style="display: none;">
+    <div id="screen-top" class="app-container" style="display: none;">
         <div class="card" style="text-align: center;"><h2 style="margin-top:0;">🏆 Топ богачей</h2></div>
         <div id="top-list" class="card"></div>
     </div>
     
-    <div id="screen-shop" class="app-container screen-wrapper" style="display: none;">
+    <div id="screen-shop" class="app-container" style="display: none;">
         <div class="card"><h2 style="margin-top:0; text-align:center;">⭐ Покупка msg</h2><div id="stars-list"></div></div>
         <div class="card"><h2 style="margin-top:0; text-align:center;">👑 Покупка VIP</h2>
             <div class="item-card" onclick="buyVipStars()">
@@ -226,22 +215,19 @@
         </div>
     </div>
 
-    <!-- НОВАЯ ВКЛАДКА: НАСТРОЙКИ -->
-    <div id="screen-settings" class="app-container screen-wrapper" style="display: none;">
+    <div id="screen-settings" class="app-container" style="display: none;">
         <div class="card" style="text-align: center;">
             <h2 style="margin-top:0;">⚙️ Настройки</h2>
             <p style="color:var(--text-muted); font-size:14px; margin-bottom: 0;">Управление интерфейсом</p>
         </div>
-        
         <div class="card">
             <div class="theme-switch-container">
                 <h4>🎨 Тема оформления</h4>
                 <button class="theme-btn" id="theme-btn-settings" onclick="toggleThemeSettings()">🌙 Тёмная</button>
             </div>
         </div>
-
         <div class="card" style="text-align: center; padding: 20px;">
-            <p style="color:var(--text-muted); font-size:13px; margin: 0;">Версия приложения: 1.0.0</p>
+            <p style="color:var(--text-muted); font-size:13px; margin: 0;">Версия приложения: 1.2.3</p>
         </div>
     </div>
 
@@ -262,7 +248,7 @@
         tg.ready(); tg.expand();
         const API_URL = 'https://bot-1793434826-8925-ayzen.bothost.tech';
 
-        // ─── ЛОГИКА ПЕРЕКЛЮЧЕНИЯ ТЕМЫ ───
+        // ─── ЛОГИКА ТЕМЫ ───
         function applyTheme(theme) {
             const body = document.body;
             const btn = document.getElementById('theme-btn-settings');
@@ -287,51 +273,35 @@
             applyTheme(savedTheme);
         };
 
-        // ─── ЛОГИКА АНИМАЦИИ ПЕРЕКЛЮЧЕНИЯ ВКЛАДОК ───
+        // ─── ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК ───
         let currentTabIndex = 0;
         const tabs = ['profile', 'games', 'top', 'shop', 'settings'];
 
         function switchTab(tabId, btn) {
             const newIndex = tabs.indexOf(tabId);
-            if (newIndex === currentTabIndex) return; // Если уже тут, ничего не делаем
+            if (newIndex === currentTabIndex) return;
 
-            const currentScreen = document.getElementById(`screen-${tabs[currentTabIndex]}`);
+            tabs.forEach((id, index) => {
+                if(index !== newIndex) document.getElementById(`screen-${id}`).style.display = 'none';
+            });
+
             const nextScreen = document.getElementById(`screen-${tabId}`);
+            nextScreen.style.display = 'flex';
             
-            // Определяем направление (влево или вправо)
-            const isMovingRight = newIndex > currentTabIndex;
-            const outClass = isMovingRight ? 'slide-out-left' : 'slide-out-right';
-            const inClass = isMovingRight ? 'slide-in-right' : 'slide-in-left';
+            // Рестарт анимации fadeIn
+            nextScreen.style.animation = 'none';
+            nextScreen.offsetHeight; 
+            nextScreen.style.animation = null; 
 
-            // Прячем текущий экран с анимацией
-            currentScreen.classList.add(outClass);
-            
-            setTimeout(() => {
-                currentScreen.style.display = 'none';
-                currentScreen.classList.remove(outClass);
+            document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+            btn.classList.add('active');
 
-                // Показываем новый экран с анимацией
-                nextScreen.style.display = 'flex';
-                nextScreen.classList.add(inClass);
-                
-                // Принудительный рефлоу для запуска анимации
-                void nextScreen.offsetWidth;
-                
-                nextScreen.classList.remove(inClass);
+            if(tabId === 'games' || tabId === 'shop') renderShop(); 
+            if(tabId === 'top') loadTop();
 
-                // Обновляем активную кнопку меню
-                document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
-                btn.classList.add('active');
-
-                // Загружаем данные для вкладки
-                if(tabId === 'games' || tabId === 'shop') renderShop(); 
-                if(tabId === 'top') loadTop();
-
-                currentTabIndex = newIndex;
-            }, 250); // Ждем завершения анимации исчезновения
+            currentTabIndex = newIndex;
         }
 
-        // ─── ОСТАЛЬНАЯ ЛОГИКА ───
         const RULES_DATA = {
             bot: [
                 { title: "1. Общие положения", text: "• Администрация имеет право изменять правила и наказывать нарушителей.<br>• Создание твинков строго запрещено.<br>• Незнание правил не освобождает от ответственности." },
@@ -454,15 +424,31 @@
             container.innerHTML = '<div style="text-align:center; padding:20px; color:var(--text-muted);">Загрузка топа... 🏆</div>';
             try {
                 const response = await fetch(`${API_URL}/api/top`, { headers: { 'X-Telegram-Init-Data': tg.initData } });
+                if(!response.ok) throw new Error();
                 const data = await response.json();
+                
+                if (!Array.isArray(data) || data.length === 0) {
+                    container.innerHTML = '<div style="text-align:center; padding:20px; color:var(--text-muted);">Топ пока пуст</div>';
+                    return;
+                }
+
                 let html = '';
                 data.forEach(item => {
-                    let av = item.avatar ? `<img src="${item.avatar}">` : item.name.charAt(0).toUpperCase();
+                    let name = item.name || 'Игрок';
+                    let av = item.avatar ? `<img src="${item.avatar}">` : name.charAt(0).toUpperCase();
                     let medal = item.place === 1 ? '🥇' : item.place === 2 ? '🥈' : item.place === 3 ? '🥉' : item.place;
-                    html += `<div class="top-item"><div class="top-place">${medal}</div><div class="top-avatar">${av}</div><div style="flex-grow:1; font-weight: 600;">${item.name} <span style="font-size:12px; color:var(--text-muted);">(ID: ${item.custom_id})</span></div><div style="font-weight: 800; color: var(--accent);">${item.balance.toLocaleString()}</div></div>`;
+                    let c_id = item.custom_id || 0;
+                    let bal = item.balance || 0;
+                    
+                    html += `<div class="top-item">
+                        <div class="top-place">${medal}</div>
+                        <div class="top-avatar">${av}</div>
+                        <div style="flex-grow:1; font-weight: 600;">${name} <span style="font-size:12px; color:var(--text-muted);">(ID: ${c_id})</span></div>
+                        <div style="font-weight: 800; color: var(--accent);">${bal.toLocaleString()}</div>
+                    </div>`;
                 });
                 container.innerHTML = html;
-            } catch(e) { container.innerHTML = '<div style="color:#FF6B6B; text-align:center;">Ошибка загрузки</div>'; }
+            } catch(e) { container.innerHTML = '<div style="color:#FF6B6B; text-align:center; padding:20px;">Ошибка загрузки топа. Проверьте API.</div>'; }
         }
 
         function renderShop() {
@@ -590,4 +576,4 @@
         loadProfile();
     </script>
 </body>
-    </html>
+                              </html>
