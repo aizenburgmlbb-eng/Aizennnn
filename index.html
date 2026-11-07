@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
+            /* Светлая тема */
             --text-main: #1C1C1E;
             --text-muted: #636366;
             --card-bg: rgba(255, 255, 255, 0.4); 
@@ -19,6 +20,7 @@
         }
 
         body[data-theme="dark"] {
+            /* Тёмная тема */
             --text-main: #FFFFFF;
             --text-muted: #EBEBF5;
             --card-bg: rgba(30, 30, 40, 0.4); 
@@ -29,6 +31,11 @@
             --nav-bg: rgba(30, 30, 40, 0.6);
         }
 
+        /* Плавный переход всех цветов и фонов */
+        body, .card, .bottom-nav, .status-badge, .item-card, .theme-btn, .rules-tab, .rule-header {
+            transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+        }
+
         body {
             margin: 0; padding: 15px; padding-bottom: 90px;
             font-family: 'Nunito', sans-serif; color: var(--text-main);
@@ -36,16 +43,19 @@
             background-image: var(--bg-image);
             background-size: cover; background-position: center; background-attachment: fixed;
             min-height: 100vh; box-sizing: border-box;
-            transition: color 0.3s ease;
             overflow-x: hidden; 
             touch-action: pan-y;
         }
 
+        /* Плавное переключение страниц */
         .app-container { 
             display: flex; flex-direction: column; gap: 15px; max-width: 500px; margin: 0 auto; 
         }
 
-        .fade-in { animation: fadeIn 0.3s ease-out forwards; }
+        .fade-in { 
+            animation: fadeIn 0.3s ease-out forwards; 
+        }
+        
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -58,7 +68,6 @@
             border-radius: 24px; padding: 18px; 
             border: 1px solid var(--card-border);
             box-shadow: var(--shadow);
-            transition: background 0.3s ease, border 0.3s ease;
         }
 
         .profile-header { display: flex; align-items: center; justify-content: space-between; }
@@ -111,7 +120,6 @@
             display: flex; justify-content: space-around; padding: 10px 0 25px;
             border-top: 1px solid var(--card-border); 
             box-shadow: 0 -4px 15px rgba(0,0,0,0.1); z-index: 100;
-            transition: background 0.3s ease;
         }
         .nav-btn {
             background: none; border: none; font-size: 11px; font-weight: 800;
@@ -349,7 +357,7 @@
         tg.ready(); tg.expand();
         const API_URL = 'https://bot-1793434826-8925-ayzen.bothost.tech';
 
-        // ─── ЛОГИКА ТЕМЫ ───
+        // ─── ПЛАВНАЯ СМЕНА ТЕМЫ ───
         function applyTheme(theme) {
             const body = document.body;
             const btn = document.getElementById('theme-btn-settings');
@@ -374,7 +382,7 @@
             applyTheme(savedTheme);
         };
 
-        // ─── ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК ───
+        // ─── ПЛАВНОЕ ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК ───
         let currentTabIndex = 0;
         const tabs = ['profile', 'games', 'top', 'shop', 'settings', 'rules'];
 
@@ -392,17 +400,17 @@
             const nextScreen = document.getElementById(`screen-${tabId}`);
             if (nextScreen) {
                 nextScreen.style.display = 'flex';
+                // Перезапуск анимации
                 nextScreen.classList.remove('fade-in');
                 void nextScreen.offsetWidth;
                 nextScreen.classList.add('fade-in');
             }
 
-            // Обновляем кнопки меню (только для видимых)
+            // Обновляем кнопки меню
             document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
             if (btnElement) {
                 btnElement.classList.add('active');
             } else {
-                // Если перешли по кнопке из настроек, подсвечиваем "Настройки"
                 const settingsBtn = document.getElementById('nav-settings');
                 if (settingsBtn && tabId === 'rules') settingsBtn.classList.add('active');
             }
@@ -424,7 +432,7 @@
             tg.HapticFeedback.impactOccurred('light');
         }
 
-        // ─── ОБРАБОТЧИК СВАЙПОВ ───
+        // ─── СВАЙПЫ ───
         let touchStartX = 0;
         let touchEndX = 0;
 
@@ -441,10 +449,10 @@
             const swipeThreshold = 50;
             const diff = touchStartX - touchEndX;
 
-            if (tabs[currentTabIndex] === 'rules') return; // Блокируем свайпы на странице правил
+            if (tabs[currentTabIndex] === 'rules') return;
 
             if (diff > swipeThreshold) {
-                if (currentTabIndex < 4) { // Ограничиваем до settings (индекс 4)
+                if (currentTabIndex < 4) {
                     switchTab(tabs[currentTabIndex + 1]);
                 }
             }
@@ -683,4 +691,4 @@
         loadProfile();
     </script>
 </body>
-                </html>
+            </html>
