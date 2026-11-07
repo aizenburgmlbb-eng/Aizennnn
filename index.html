@@ -41,13 +41,18 @@
             background-size: cover; background-position: center; background-attachment: fixed;
             min-height: 100vh; box-sizing: border-box;
             transition: color 0.3s ease;
-            overflow-x: hidden;
+            overflow-x: hidden; 
+            touch-action: pan-y; /* Разрешаем скролл вверх-вниз, но обрабатываем свайпы влево-вправо */
         }
 
         /* Плавное появление контента */
         .app-container { 
             display: flex; flex-direction: column; gap: 15px; max-width: 500px; margin: 0 auto; 
-            animation: fadeIn 0.3s ease-out forwards; 
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.3s ease-out forwards;
         }
 
         @keyframes fadeIn {
@@ -175,7 +180,7 @@
 </head>
 <body data-theme="dark">
     
-    <div id="screen-profile" class="app-container">
+    <div id="screen-profile" class="app-container fade-in">
         <div style="color:var(--text-muted); text-align:center; margin-top:50px; font-weight: 800;">Загрузка... 🍂</div>
     </div>
     
@@ -277,29 +282,68 @@
         let currentTabIndex = 0;
         const tabs = ['profile', 'games', 'top', 'shop', 'settings'];
 
-        function switchTab(tabId, btn) {
+        function switchTab(tabId, btnElement = null) {
             const newIndex = tabs.indexOf(tabId);
             if (newIndex === currentTabIndex) return;
 
-            tabs.forEach((id, index) => {
-                if(index !== newIndex) document.getElementById(`screen-${id}`).style.display = 'none';
-            });
-
+            // Скрываем старый экран
+            document.getElementById(`screen-${tabs[currentTabIndex]}`).style.display = 'none';
+            
+            // Показываем новый экран
             const nextScreen = document.getElementById(`screen-${tabId}`);
             nextScreen.style.display = 'flex';
             
-            // Рестарт анимации fadeIn
-            nextScreen.style.animation = 'none';
-            nextScreen.offsetHeight; 
-            nextScreen.style.animation = null; 
+            // Анимация появления
+            nextScreen.classList.remove('fade-in');
+            void nextScreen.offsetWidth; // trigger reflow
+            nextScreen.classList.add('fade-in');
 
+            // Обновляем кнопку в меню
             document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
-            btn.classList.add('active');
+            if (btnElement) {
+                btnElement.classList.add('active');
+            } else {
+                // Если свайпнули, находим нужную кнопку
+                const targetBtn = document.querySelector(`.nav-btn[onclick*="switchTab('${tabId}'"]`);
+                if (targetBtn) targetBtn.classList.add('active');
+            }
 
+            // Загружаем данные
             if(tabId === 'games' || tabId === 'shop') renderShop(); 
             if(tabId === 'top') loadTop();
 
             currentTabIndex = newIndex;
+        }
+
+        // ─── ОБРАБОТЧИК СВАЙПОВ ───
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+
+        document.addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }, { passive: true });
+
+        function handleSwipe() {
+            const swipeThreshold = 50; // Минимальная длина свайпа в пикселях
+            const diff = touchStartX - touchEndX;
+
+            // Свайп влево (следующая вкладка)
+            if (diff > swipeThreshold) {
+                if (currentTabIndex < tabs.length - 1) {
+                    switchTab(tabs[currentTabIndex + 1]);
+                }
+            }
+            // Свайп вправо (предыдущая вкладка)
+            if (diff < -swipeThreshold) {
+                if (currentTabIndex > 0) {
+                    switchTab(tabs[currentTabIndex - 1]);
+                }
+            }
         }
 
         const RULES_DATA = {
@@ -576,4 +620,4 @@
         loadProfile();
     </script>
 </body>
-                              </html>
+                    </html>
