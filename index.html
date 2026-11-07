@@ -8,7 +8,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* Светлая тема */
             --text-main: #1C1C1E;
             --text-muted: #636366;
             --card-bg: rgba(255, 255, 255, 0.4); 
@@ -21,7 +20,6 @@
         }
 
         body[data-theme="dark"] {
-            /* Тёмная тема */
             --text-main: #FFFFFF;
             --text-muted: #EBEBF5;
             --card-bg: rgba(30, 30, 40, 0.4); 
@@ -41,11 +39,25 @@
             background-size: cover; background-position: center; background-attachment: fixed;
             min-height: 100vh; box-sizing: border-box;
             transition: color 0.3s ease;
+            overflow-x: hidden; /* Скрываем вылезание за экран при анимации */
         }
 
-        .app-container { display: flex; flex-direction: column; gap: 15px; max-width: 500px; margin: 0 auto; }
+        /* Контейнер для анимации свайпа */
+        .screen-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-width: 500px;
+            margin: 0 auto;
+            transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease;
+        }
 
-        /* iOS Стекло */
+        /* Анимации */
+        .slide-in-right { transform: translateX(30px); opacity: 0; }
+        .slide-in-left { transform: translateX(-30px); opacity: 0; }
+        .slide-out-right { transform: translateX(30px); opacity: 0; }
+        .slide-out-left { transform: translateX(-30px); opacity: 0; }
+
         .card {
             background: var(--card-bg); 
             backdrop-filter: blur(25px); 
@@ -53,11 +65,8 @@
             border-radius: 24px; padding: 18px; 
             border: 1px solid var(--card-border);
             box-shadow: var(--shadow);
-            animation: slideUp 0.4s ease-out forwards; opacity: 0; transform: translateY(15px);
             transition: background 0.3s ease, border 0.3s ease;
         }
-
-        @keyframes slideUp { to { opacity: 1; transform: translateY(0); } }
 
         .profile-header { display: flex; align-items: center; justify-content: space-between; }
         .avatar {
@@ -76,8 +85,7 @@
         .status-badge {
             display: inline-block; background: rgba(217, 115, 78, 0.15); color: var(--accent);
             padding: 4px 10px; border-radius: 12px; font-size: 13px; font-weight: 800;
-            margin-top: 4px; margin-left: 4px;
-            border: 1px solid var(--card-border);
+            margin-top: 4px; margin-left: 4px; border: 1px solid var(--card-border);
         }
 
         .finance-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
@@ -113,12 +121,12 @@
             transition: background 0.3s ease;
         }
         .nav-btn {
-            background: none; border: none; font-size: 12px; font-weight: 800;
+            background: none; border: none; font-size: 11px; font-weight: 800;
             color: var(--text-muted); display: flex; flex-direction: column; align-items: center;
             gap: 4px; cursor: pointer; transition: color 0.3s;
         }
         .nav-btn.active { color: var(--accent); }
-        .nav-btn span.icon { font-size: 24px; }
+        .nav-btn span.icon { font-size: 22px; }
 
         .item-card {
             display: flex; justify-content: space-between; align-items: center;
@@ -161,25 +169,28 @@
         .rules-content { padding: 0 15px; max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out, padding 0.3s ease; font-size: 14px; line-height: 1.5; color: var(--text-muted); }
         .rules-content.open { max-height: 800px; padding: 15px; border-top: 1px solid var(--card-border); }
 
-        /* Переключатель тем */
-        .theme-toggle {
-            position: fixed; top: 15px; right: 15px; z-index: 999;
-            background: var(--card-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-            border: 1px solid var(--card-border); border-radius: 50%;
-            width: 45px; height: 45px; font-size: 20px; color: var(--text-main);
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer; box-shadow: var(--shadow); transition: transform 0.2s;
+        .theme-switch-container {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 15px; background: rgba(255,255,255,0.1); border-radius: 16px;
+            border: 1px solid var(--card-border); margin-top: 10px;
         }
-        .theme-toggle:active { transform: scale(0.9); }
+        .theme-switch-container h4 { margin: 0; font-size: 16px; }
+        .theme-btn {
+            background: var(--card-bg); border: 1px solid var(--card-border);
+            padding: 10px 20px; border-radius: 12px; font-weight: 800; font-size: 16px;
+            color: var(--text-main); cursor: pointer; transition: transform 0.2s;
+        }
+        .theme-btn:active { transform: scale(0.95); }
     </style>
 </head>
 <body data-theme="dark">
     
-    <button class="theme-toggle" id="theme-btn" onclick="toggleTheme()">☀️</button>
-
-    <div id="screen-profile" class="app-container"><div style="color:var(--text-muted); text-align:center; margin-top:50px; font-weight: 800;">Загрузка... 🍂</div></div>
+    <!-- Все экраны обернуты в app-container -->
+    <div id="screen-profile" class="app-container screen-wrapper">
+        <div style="color:var(--text-muted); text-align:center; margin-top:50px; font-weight: 800;">Загрузка... 🍂</div>
+    </div>
     
-    <div id="screen-games" class="app-container" style="display: none;">
+    <div id="screen-games" class="app-container screen-wrapper" style="display: none;">
         <div class="card" style="text-align: center;"><h2 style="margin-top:0;">👑 VIP Подписка</h2></div>
         <div id="vip-list"></div>
         <div class="card" style="text-align: center; margin-top: 10px;"><h2 style="margin-top:0;">🎁 Кейсы</h2></div>
@@ -196,9 +207,12 @@
         </div>
     </div>
     
-    <div id="screen-top" class="app-container" style="display: none;"><div class="card" style="text-align: center;"><h2 style="margin-top:0;">🏆 Топ богачей</h2></div><div id="top-list" class="card"></div></div>
+    <div id="screen-top" class="app-container screen-wrapper" style="display: none;">
+        <div class="card" style="text-align: center;"><h2 style="margin-top:0;">🏆 Топ богачей</h2></div>
+        <div id="top-list" class="card"></div>
+    </div>
     
-    <div id="screen-shop" class="app-container" style="display: none;">
+    <div id="screen-shop" class="app-container screen-wrapper" style="display: none;">
         <div class="card"><h2 style="margin-top:0; text-align:center;">⭐ Покупка msg</h2><div id="stars-list"></div></div>
         <div class="card"><h2 style="margin-top:0; text-align:center;">👑 Покупка VIP</h2>
             <div class="item-card" onclick="buyVipStars()">
@@ -211,16 +225,24 @@
             <a href="https://t.me/chat_games_Gojo" target="_blank" class="item-card"><div class="item-info"><h4>💬 Группа</h4></div></a>
         </div>
     </div>
-    
-    <div id="screen-rules" class="app-container" style="display: none;">
-        <div class="card" style="text-align: center; padding-bottom: 10px;">
-            <h2 style="margin-top:0;">📜 Правила</h2><p style="color:var(--text-muted); font-size:14px; margin-bottom: 0;">Незнание правил не освобождает от ответственности</p>
-            <div class="rules-tabs" style="margin-top: 15px;">
-                <div class="rules-tab active" id="tab-bot" onclick="switchRules('bot')">🤖 Бот</div>
-                <div class="rules-tab" id="tab-group" onclick="switchRules('group')">💬 Группа</div>
+
+    <!-- НОВАЯ ВКЛАДКА: НАСТРОЙКИ -->
+    <div id="screen-settings" class="app-container screen-wrapper" style="display: none;">
+        <div class="card" style="text-align: center;">
+            <h2 style="margin-top:0;">⚙️ Настройки</h2>
+            <p style="color:var(--text-muted); font-size:14px; margin-bottom: 0;">Управление интерфейсом</p>
+        </div>
+        
+        <div class="card">
+            <div class="theme-switch-container">
+                <h4>🎨 Тема оформления</h4>
+                <button class="theme-btn" id="theme-btn-settings" onclick="toggleThemeSettings()">🌙 Тёмная</button>
             </div>
         </div>
-        <div class="card" id="rules-list"></div>
+
+        <div class="card" style="text-align: center; padding: 20px;">
+            <p style="color:var(--text-muted); font-size:13px; margin: 0;">Версия приложения: 1.0.0</p>
+        </div>
     </div>
 
     <div id="modal" class="modal-overlay">
@@ -228,44 +250,88 @@
     </div>
 
     <div class="bottom-nav">
-        <button class="nav-btn active" onclick="switchTab('profile', this)"><span class="icon">👤</span> Профиль</button>
-        <button class="nav-btn" onclick="switchTab('games', this)"><span class="icon">🎮</span> Игры</button>
-        <button class="nav-btn" onclick="switchTab('top', this)"><span class="icon">🏆</span> Топ</button>
-        <button class="nav-btn" onclick="switchTab('shop', this)"><span class="icon">🛒</span> Магазин</button>
+        <button class="nav-btn active" id="nav-profile" onclick="switchTab('profile', this)"><span class="icon">👤</span> Профиль</button>
+        <button class="nav-btn" id="nav-games" onclick="switchTab('games', this)"><span class="icon">🎮</span> Игры</button>
+        <button class="nav-btn" id="nav-top" onclick="switchTab('top', this)"><span class="icon">🏆</span> Топ</button>
+        <button class="nav-btn" id="nav-shop" onclick="switchTab('shop', this)"><span class="icon">🛒</span> Магазин</button>
+        <button class="nav-btn" id="nav-settings" onclick="switchTab('settings', this)"><span class="icon">⚙️</span> Настройки</button>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.ready(); tg.expand();
-        const API_URL = 'https://bot-1793434826-8925-ayzen.bothost.tech'; // Твой актуальный домен
+        const API_URL = 'https://bot-1793434826-8925-ayzen.bothost.tech';
 
-        // ─── ЛОГИКА СМЕНЫ ТЕМЫ ───
-        function toggleTheme() {
+        // ─── ЛОГИКА ПЕРЕКЛЮЧЕНИЯ ТЕМЫ ───
+        function applyTheme(theme) {
             const body = document.body;
-            const btn = document.getElementById('theme-btn');
-            if (body.getAttribute('data-theme') === 'dark') {
+            const btn = document.getElementById('theme-btn-settings');
+            if (theme === 'light') {
                 body.setAttribute('data-theme', 'light');
-                btn.innerText = '🌙';
+                btn.innerText = '☀️ Светлая';
                 localStorage.setItem('theme', 'light');
             } else {
                 body.setAttribute('data-theme', 'dark');
-                btn.innerText = '☀️';
+                btn.innerText = '🌙 Тёмная';
                 localStorage.setItem('theme', 'dark');
             }
         }
 
+        function toggleThemeSettings() {
+            const current = document.body.getAttribute('data-theme');
+            applyTheme(current === 'dark' ? 'light' : 'dark');
+        }
+
         window.onload = function() {
-            const savedTheme = localStorage.getItem('theme');
-            const btn = document.getElementById('theme-btn');
-            if (savedTheme === 'light') {
-                document.body.setAttribute('data-theme', 'light');
-                btn.innerText = '🌙';
-            } else {
-                document.body.setAttribute('data-theme', 'dark');
-                btn.innerText = '☀️';
-            }
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            applyTheme(savedTheme);
         };
 
+        // ─── ЛОГИКА АНИМАЦИИ ПЕРЕКЛЮЧЕНИЯ ВКЛАДОК ───
+        let currentTabIndex = 0;
+        const tabs = ['profile', 'games', 'top', 'shop', 'settings'];
+
+        function switchTab(tabId, btn) {
+            const newIndex = tabs.indexOf(tabId);
+            if (newIndex === currentTabIndex) return; // Если уже тут, ничего не делаем
+
+            const currentScreen = document.getElementById(`screen-${tabs[currentTabIndex]}`);
+            const nextScreen = document.getElementById(`screen-${tabId}`);
+            
+            // Определяем направление (влево или вправо)
+            const isMovingRight = newIndex > currentTabIndex;
+            const outClass = isMovingRight ? 'slide-out-left' : 'slide-out-right';
+            const inClass = isMovingRight ? 'slide-in-right' : 'slide-in-left';
+
+            // Прячем текущий экран с анимацией
+            currentScreen.classList.add(outClass);
+            
+            setTimeout(() => {
+                currentScreen.style.display = 'none';
+                currentScreen.classList.remove(outClass);
+
+                // Показываем новый экран с анимацией
+                nextScreen.style.display = 'flex';
+                nextScreen.classList.add(inClass);
+                
+                // Принудительный рефлоу для запуска анимации
+                void nextScreen.offsetWidth;
+                
+                nextScreen.classList.remove(inClass);
+
+                // Обновляем активную кнопку меню
+                document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+                btn.classList.add('active');
+
+                // Загружаем данные для вкладки
+                if(tabId === 'games' || tabId === 'shop') renderShop(); 
+                if(tabId === 'top') loadTop();
+
+                currentTabIndex = newIndex;
+            }, 250); // Ждем завершения анимации исчезновения
+        }
+
+        // ─── ОСТАЛЬНАЯ ЛОГИКА ───
         const RULES_DATA = {
             bot: [
                 { title: "1. Общие положения", text: "• Администрация имеет право изменять правила и наказывать нарушителей.<br>• Создание твинков строго запрещено.<br>• Незнание правил не освобождает от ответственности." },
@@ -283,17 +349,6 @@
         };
 
         let currentRuleType = 'bot';
-
-        function switchTab(tabId, btn) {
-            document.querySelectorAll('.app-container').forEach(el => el.style.display = 'none');
-            document.getElementById(`screen-${tabId}`).style.display = 'flex';
-            document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
-            btn.classList.add('active');
-            
-            if(tabId === 'games' || tabId === 'shop') renderShop(); 
-            if(tabId === 'top') loadTop();
-            if(tabId === 'rules') renderRules();
-        }
 
         async function loadProfile() {
             try {
@@ -444,3 +499,95 @@
         function renderRules() {
             const list = document.getElementById('rules-list'); const rules = RULES_DATA[currentRuleType];
             let html = '';
+            rules.forEach((rule, index) => {
+                html += `<div class="rules-item"><div class="rules-header" onclick="toggleRule(${index})"><span>${rule.title}</span><span id="icon-${currentRuleType}-${index}">➕</span></div><div class="rules-content" id="content-${currentRuleType}-${index}">${rule.text}</div></div>`;
+            });
+            list.innerHTML = html;
+        }
+
+        function toggleRule(index) {
+            const content = document.getElementById(`content-${currentRuleType}-${index}`); const icon = document.getElementById(`icon-${currentRuleType}-${index}`);
+            if (content.classList.contains('open')) { content.classList.remove('open'); icon.innerText = '➕'; } 
+            else {
+                document.querySelectorAll(`.rules-content`).forEach(el => el.classList.remove('open')); document.querySelectorAll(`.rules-header span:last-child`).forEach(el => el.innerText = '➕');
+                content.classList.add('open'); icon.innerText = '➖';
+            }
+        }
+
+        function closeModal() { document.getElementById('modal').style.display = 'none'; }
+
+        async function buyVip(weeks) {
+            try {
+                const res = await fetch(`${API_URL}/api/buy_vip`, { method: 'POST', headers: { 'X-Telegram-Init-Data': tg.initData, 'Content-Type': 'application/json' }, body: JSON.stringify({ weeks: weeks }) });
+                const data = await res.json();
+                if (data.success) { tg.showAlert(`VIP куплен!`); loadProfile(); } else tg.showAlert(data.error);
+            } catch(e) { tg.showAlert('Ошибка сети'); }
+        }
+
+        async function buyVipStars() {
+            try {
+                const res = await fetch(`${API_URL}/api/buy_vip_stars`, { method: 'POST', headers: { 'X-Telegram-Init-Data': tg.initData } });
+                const data = await res.json();
+                if (data.success) {
+                    tg.openInvoice(data.link, (status) => {
+                        if (status === 'paid') { tg.HapticFeedback.notificationOccurred('success'); setTimeout(() => loadProfile(), 2000); }
+                    });
+                } else tg.showAlert(data.error);
+            } catch(e) { tg.showAlert('Ошибка сети'); }
+        }
+
+        async function openCase(caseId) {
+            const modal = document.getElementById('modal'); const title = document.getElementById('modal-title'); const body = document.getElementById('modal-body'); const desc = document.getElementById('modal-desc'); const btn = document.getElementById('modal-btn');
+            modal.style.display = 'flex'; title.innerText = 'Крутим кейс...'; desc.innerText = ''; btn.style.display = 'none';
+            const emojis = ['🎁', '🔥', '👋', '🎀', '👜', '👛', '🤑', '🤩', '🥳', '💎', '💰', '🏆', '⭐', '🎰', '👑'];
+            let spin = setInterval(() => { let line = []; for(let i=0; i<9; i++) line.push(emojis[Math.floor(Math.random() * emojis.length)]); body.innerHTML = `<div>${line[0]} ${line[1]} ${line[2]}</div><div>${line[3]} ${line[4]} ${line[5]}</div><div>${line[6]} ${line[7]} ${line[8]}</div>`; }, 100);
+            try {
+                const res = await fetch(`${API_URL}/api/open_case`, { method: 'POST', headers: { 'X-Telegram-Init-Data': tg.initData, 'Content-Type': 'application/json' }, body: JSON.stringify({ case_key: caseId }) });
+                const data = await res.json();
+                setTimeout(() => {
+                    clearInterval(spin);
+                    if (data.success) { tg.HapticFeedback.notificationOccurred('success'); title.innerText = '🎉 Результат!'; body.innerHTML = '✨'; desc.innerHTML = data.result_text.replace(/\n/g, '<br>'); loadProfile(); }
+                    else { title.innerText = '❌ Ошибка'; body.innerHTML = '😢'; desc.innerText = data.error; }
+                    btn.style.display = 'block';
+                }, 2000);
+            } catch(e) { clearInterval(spin); title.innerText = 'Ошибка'; btn.style.display = 'block'; }
+        }
+
+        async function playCasino(bet, btn) {
+            btn.disabled = true;
+            const modal = document.getElementById('modal'); const title = document.getElementById('modal-title'); const body = document.getElementById('modal-body'); const desc = document.getElementById('modal-desc'); const mbtn = document.getElementById('modal-btn');
+            modal.style.display = 'flex'; title.innerText = '🎰 Крутим...'; desc.innerText = ''; mbtn.style.display = 'none'; body.classList.add('casino-slots');
+            const slots = ["🍒", "🍋", "🍊", "⭐", "💎", "7️⃣"];
+            let spin = setInterval(() => { body.innerHTML = `<span>${slots[Math.floor(Math.random()*6)]}</span> | <span>${slots[Math.floor(Math.random()*6)]}</span> | <span>${slots[Math.floor(Math.random()*6)]}</span>`; }, 100);
+            try {
+                const res = await fetch(`${API_URL}/api/casino`, { method: 'POST', headers: { 'X-Telegram-Init-Data': tg.initData, 'Content-Type': 'application/json' }, body: JSON.stringify({ bet: bet }) });
+                const data = await res.json();
+                setTimeout(() => {
+                    clearInterval(spin); body.classList.remove('casino-slots');
+                    if (data.success) {
+                        const [a,b,c] = data.result; body.innerHTML = `<div style="font-size:40px;">${a} | ${b} | ${c}</div>`;
+                        if (data.win_amount > 0) { tg.HapticFeedback.notificationOccurred('success'); title.innerText = data.is_jackpot ? '🎉 ДЖЕКПОТ!' : '🎉 Победа!'; desc.innerHTML = `Выигрыш: <b style="color:green;">+${data.win_amount}</b> msg`; }
+                        else { title.innerText = '😢 Проигрыш'; desc.innerHTML = `Потеряно: <b style="color:red;">-${bet}</b> msg`; }
+                        loadProfile();
+                    } else { title.innerText = '⏳ Ожидание'; body.innerHTML = '⏳'; desc.innerText = data.error; }
+                    mbtn.style.display = 'block'; btn.disabled = false;
+                }, 2000);
+            } catch(e) { clearInterval(spin); title.innerText = 'Ошибка'; mbtn.style.display = 'block'; btn.disabled = false; }
+        }
+
+        async function buyStars(stars) {
+            try {
+                const res = await fetch(`${API_URL}/api/buy_stars`, { method: 'POST', headers: { 'X-Telegram-Init-Data': tg.initData, 'Content-Type': 'application/json' }, body: JSON.stringify({ stars: stars }) });
+                const data = await res.json();
+                if (data.success) {
+                    tg.openInvoice(data.link, (status) => {
+                        if (status === 'paid') { tg.HapticFeedback.notificationOccurred('success'); setTimeout(() => loadProfile(), 2000); }
+                    });
+                } else tg.showAlert(data.error);
+            } catch(e) { tg.showAlert('Ошибка сети'); }
+        }
+
+        loadProfile();
+    </script>
+</body>
+    </html>
