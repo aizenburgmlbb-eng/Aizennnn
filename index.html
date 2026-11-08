@@ -8,7 +8,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* Светлая тема */
             --text-main: #1C1C1E;
             --text-muted: #636366;
             --card-bg: rgba(255, 255, 255, 0.4); 
@@ -20,7 +19,6 @@
         }
 
         body[data-theme="dark"] {
-            /* Тёмная тема */
             --text-main: #FFFFFF;
             --text-muted: #EBEBF5;
             --card-bg: rgba(30, 30, 40, 0.4); 
@@ -31,8 +29,8 @@
             --nav-bg: rgba(30, 30, 40, 0.6);
         }
 
-        /* Плавный переход всех цветов и фонов */
-        body, .card, .bottom-nav, .status-badge, .item-card, .theme-btn, .rules-tab, .rule-header {
+        /* Плавный переход цветов при смене темы */
+        body, .card, .bottom-nav, .status-badge, .item-card, .theme-btn, .rules-tab, .rule-header, .finance-item, .top-item {
             transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
         }
 
@@ -44,23 +42,21 @@
             background-size: cover; background-position: center; background-attachment: fixed;
             min-height: 100vh; box-sizing: border-box;
             overflow-x: hidden; 
-            touch-action: pan-y;
+            position: relative;
         }
 
-        /* Плавное переключение страниц */
+        /* ─── АНИМАЦИЯ ПОЯВЛЕНИЯ ─── */
         .app-container { 
             display: flex; flex-direction: column; gap: 15px; max-width: 500px; margin: 0 auto; 
+            animation: slideUpFade 0.3s ease-out forwards;
         }
 
-        .fade-in { 
-            animation: fadeIn 0.3s ease-out forwards; 
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+        @keyframes slideUpFade {
+            from { opacity: 0; transform: translateY(15px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* Базовые стили карточек */
         .card {
             background: var(--card-bg); 
             backdrop-filter: blur(25px); 
@@ -162,18 +158,18 @@
         .case-grid { font-size: 32px; line-height: 1.5; margin: 15px 0; }
         .casino-slots { font-size: 40px; margin: 20px 0; display: flex; justify-content: space-around;}
 
-        /* Стили Настроек */
+        /* Настройки */
         .theme-switch-container { display: flex; align-items: center; justify-content: space-between; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 16px; border: 1px solid var(--card-border); margin-top: 10px; }
         .theme-switch-container h4 { margin: 0; font-size: 16px; }
         .theme-btn { background: var(--card-bg); border: 1px solid var(--card-border); padding: 10px 20px; border-radius: 12px; font-weight: 800; font-size: 16px; color: var(--text-main); cursor: pointer; transition: transform 0.2s; }
         .theme-btn:active { transform: scale(0.95); }
 
-        /* Стили Правил */
+        /* Правила */
         .rules-tabs { display: flex; gap: 10px; margin-bottom: 20px; }
         .rules-tab { flex: 1; padding: 12px; text-align: center; font-weight: 800; font-size: 15px; background: rgba(255,255,255,0.1); border-radius: 16px; cursor: pointer; border: 1px solid var(--card-border); transition: all 0.2s; color: var(--text-main); }
         .rules-tab.active { background: var(--accent); color: #000; box-shadow: 0 4px 15px rgba(0, 255, 255, 0.3); }
         .rule-content { display: none; }
-        .rule-content.active { display: block; animation: fadeIn 0.3s ease-out; }
+        .rule-content.active { display: block; }
         .rule-header { color: var(--accent); font-size: 18px; font-weight: 800; margin-top: 25px; margin-bottom: 10px; border-bottom: 1px solid var(--card-border); padding-bottom: 8px; }
         .rule-list { margin: 0; padding-left: 20px; color: var(--text-main); font-size: 15px; line-height: 1.6; }
         .rule-list li { margin-bottom: 10px; }
@@ -187,10 +183,12 @@
 </head>
 <body data-theme="dark">
     
-    <div id="screen-profile" class="app-container fade-in">
+    <!-- Вкладка ПРОФИЛЬ -->
+    <div id="screen-profile" class="app-container">
         <div style="color:var(--text-muted); text-align:center; margin-top:50px; font-weight: 800;">Загрузка... 🍂</div>
     </div>
     
+    <!-- Вкладка ИГРЫ -->
     <div id="screen-games" class="app-container" style="display: none;">
         <div class="card" style="text-align: center;"><h2 style="margin-top:0;">👑 VIP Подписка</h2></div>
         <div id="vip-list"></div>
@@ -208,11 +206,13 @@
         </div>
     </div>
     
+    <!-- Вкладка ТОП -->
     <div id="screen-top" class="app-container" style="display: none;">
         <div class="card" style="text-align: center;"><h2 style="margin-top:0;">🏆 Топ богачей</h2></div>
         <div id="top-list" class="card"></div>
     </div>
     
+    <!-- Вкладка МАГАЗИН -->
     <div id="screen-shop" class="app-container" style="display: none;">
         <div class="card"><h2 style="margin-top:0; text-align:center;">⭐ Покупка msg</h2><div id="stars-list"></div></div>
         <div class="card"><h2 style="margin-top:0; text-align:center;">👑 Покупка VIP</h2>
@@ -227,100 +227,7 @@
         </div>
     </div>
 
-    <!-- Вкладка ПРАВИЛА -->
-    <div id="screen-rules" class="app-container" style="display: none;">
-        <div class="card">
-            <div class="rules-tabs">
-                <div class="rules-tab active" onclick="switchRules('bot', this)">🤖 Бот</div>
-                <div class="rules-tab" onclick="switchRules('group', this)">💬 Группа</div>
-            </div>
-
-            <!-- Правила Бота -->
-            <div id="rule-bot" class="rule-content active">
-                <h1 class="neon-title">「 Амина 」</h1>
-                <p class="subtitle">Правила бота • October 22, 2026</p>
-
-                <div class="rule-header">1. Общие положения</div>
-                <ul class="rule-list">
-                    <li>Администрация проекта имеет право изменять правила, условия игр и наказывать нарушителей без предварительного уведомления.</li>
-                    <li>Создание мультиаккаунтов (твинков) для получения дополнительных бонусов, обхода банов или накрутки рефералов строго запрещено.</li>
-                    <li>Незнание правил не освобождает от ответственности. Заходя в бота, вы автоматически соглашаетесь с ними.</li>
-                </ul>
-
-                <div class="rule-header">2. Экономика и валюта (msg)</div>
-                <ul class="rule-list">
-                    <li>Запрещено использование любых багов, дыр в коде или сторонних скриптов для накрутки валюты. За найденный баг и сообщение о нем администрация может выдать награду.</li>
-                    <li>Все подарки (/gift), переводы, ставки в дуэлях и казино совершаются добровольно. Возврат средств по причине «я случайно нажал» или «он не захотел возвращать» не производится.</li>
-                    <li>Ограбления (/rob) являются игровой механикой. Жалобы на успешное ограбление модерацией не рассматриваются.</li>
-                </ul>
-
-                <div class="rule-header">3. Социальное взаимодействие</div>
-                <ul class="rule-list">
-                    <li>Предложение брака (/marry) должно быть обоюдным. Обман партнера ради завладения общим бюджетом с последующим разводом расценивается как мошенничество и карается баном.</li>
-                    <li>Анонимные сообщения (/anon) не должны содержать оскорблений, угроз, контента 18+ и рекламы. При нарушении доступ к анонимкам может быть заблокирован навсегда.</li>
-                </ul>
-
-                <div class="rule-header">4. Дуэли и Игры</div>
-                <ul class="rule-list">
-                    <li>Договорные матчи в дуэлях (слив ставок намеренно) запрещены. Игра должна проходить честно.</li>
-                    <li>Запрещено использование стороннего программного обеспечения (автокликеров, макросов) для обхода кулдаунов в казино или кейсах.</li>
-                </ul>
-
-                <div class="rule-header">5. Система наказаний</div>
-                <ul class="rule-list">
-                    <li>⚠️ <b>Варн (предупреждение):</b> Выдается за мелкие нарушения. При накоплении 3-х варнов автоматически выдается бан на 7 дней.</li>
-                    <li>🚫 <b>Бан:</b> Выдается за серьезные нарушения (мошенничество, обход правил, агрессия). Срок может составлять от 1 дня до пожизненного.</li>
-                    <li>🗑️ <b>Удаление аккаунта:</b> Применяется к злостным читерам и нарушителям без права восстановления профиля.</li>
-                </ul>
-
-                <div class="memo-box">
-                    <h3>📌 Памятка</h3>
-                    <p>• Незнание правил не освобождает от ответственности.</p>
-                    <p>• Если вы увидели нарушителя — нажмите кнопку «Пожаловаться» (в анонимках) или напишите модератору.</p>
-                    <p>• Администрация всегда права. Решения модераторов не обсуждаются в общем чате.</p>
-                </div>
-            </div>
-
-            <!-- Правила Группы -->
-            <div id="rule-group" class="rule-content">
-                <h1 class="neon-title">「 Т᧐чκᥲ ʙᴄᴛρᥱчᥙ 」</h1>
-                <p class="subtitle">Правила сетки и групп • October 22, 2026</p>
-
-                <div class="rule-header">1. Общение и уважение</div>
-                <ul class="rule-list">
-                    <li>Запрещены прямые оскорбления, унижения личности, разжигание межнациональных или религиозных конфликтов.</li>
-                    <li>Запрещен спам, массовый флуд.</li>
-                </ul>
-
-                <div class="rule-header">2. Контент</div>
-                <ul class="rule-list">
-                    <li>Строго запрещена публикация контента 18+ (порнография), шок-контента (сцены насилия) и призывов к экстремизму.</li>
-                    <li>Реклама сторонних ресурсов, ботов, чатов и каналов разрешена только с личного согласия владельца проекта — <b>@Kaoruko_off</b>.</li>
-                </ul>
-
-                <div class="rule-header">3. Конфликты</div>
-                <ul class="rule-list">
-                    <li>Решайте личные конфликты в личных сообщениях. Публичные разборки будут пресекаться модераторами.</li>
-                    <li>Не обсуждайте действия администрации в общем чате. Для этого есть ЛС владельца или модераторов.</li>
-                </ul>
-
-                <div class="rule-header">4. Наказания в группе</div>
-                <ul class="rule-list">
-                    <li>🔇 <b>Мут:</b> Выдается за флуд, спам или чрезмерную нецензурную лексику. Срок: от 1 часа до 24 часов.</li>
-                    <li>🚫 <b>Бан:</b> Выдается за агрессию, рекламу, повторное нарушение правил после мута. Срок: от 1 дня до навсегда.</li>
-                </ul>
-
-                <div class="memo-box">
-                    <h3>📌 Памятка</h3>
-                    <p>• Незнание правил не освобождает от ответственности.</p>
-                    <p>• Если вы увидели нарушителя — нажмите кнопку «Пожаловаться» (в анонимках) или напишите модератору.</p>
-                    <p>• Администрация всегда права. Решения модераторов не обсуждаются в общем чате.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Вкладка Настройки -->
+    <!-- Вкладка НАСТРОЙКИ -->
     <div id="screen-settings" class="app-container" style="display: none;">
         <div class="card" style="text-align: center;">
             <h2 style="margin-top:0;">⚙️ Настройки</h2>
@@ -331,7 +238,6 @@
                 <h4>🎨 Тема оформления</h4>
                 <button class="theme-btn" id="theme-btn-settings" onclick="toggleThemeSettings()">🌙 Тёмная</button>
             </div>
-            <!-- Кнопка перехода к правилам -->
             <button class="btn" style="margin-top: 15px; background: #8B7D73;" onclick="switchTab('rules')">📜 Правила бота и группы</button>
         </div>
         <div class="card" style="text-align: center; padding: 20px;">
@@ -339,11 +245,92 @@
         </div>
     </div>
 
+    <!-- Вкладка ПРАВИЛА -->
+    <div id="screen-rules" class="app-container" style="display: none;">
+        <div class="card">
+            <div class="rules-tabs">
+                <div class="rules-tab active" onclick="switchRules('bot', this)">🤖 Бот</div>
+                <div class="rules-tab" onclick="switchRules('group', this)">💬 Группа</div>
+            </div>
+
+            <div id="rule-bot" class="rule-content active">
+                <h1 class="neon-title">「 Амина 」</h1>
+                <p class="subtitle">Правила бота • October 22, 2026</p>
+                <div class="rule-header">1. Общие положения</div>
+                <ul class="rule-list">
+                    <li>Администрация проекта имеет право изменять правила, условия игр и наказывать нарушителей без предварительного уведомления.</li>
+                    <li>Создание мультиаккаунтов (твинков) для получения дополнительных бонусов, обхода банов или накрутки рефералов строго запрещено.</li>
+                    <li>Незнание правил не освобождает от ответственности. Заходя в бота, вы автоматически соглашаетесь с ними.</li>
+                </ul>
+                <div class="rule-header">2. Экономика и валюта (msg)</div>
+                <ul class="rule-list">
+                    <li>Запрещено использование любых багов, дыр в коде или сторонних скриптов для накрутки валюты. За найденный баг и сообщение о нем администрация может выдать награду.</li>
+                    <li>Все подарки (/gift), переводы, ставки в дуэлях и казино совершаются добровольно. Возврат средств по причине «я случайно нажал» или «он не захотел возвращать» не производится.</li>
+                    <li>Ограбления (/rob) являются игровой механикой. Жалобы на успешное ограбление модерацией не рассматриваются.</li>
+                </ul>
+                <div class="rule-header">3. Социальное взаимодействие</div>
+                <ul class="rule-list">
+                    <li>Предложение брака (/marry) должно быть обоюдным. Обман партнера ради завладения общим бюджетом с последующим разводом расценивается как мошенничество и карается баном.</li>
+                    <li>Анонимные сообщения (/anon) не должны содержать оскорблений, угроз, контента 18+ и рекламы. При нарушении доступ к анонимкам может быть заблокирован навсегда.</li>
+                </ul>
+                <div class="rule-header">4. Дуэли и Игры</div>
+                <ul class="rule-list">
+                    <li>Договорные матчи в дуэлях (слив ставок намеренно) запрещены. Игра должна проходить честно.</li>
+                    <li>Запрещено использование стороннего программного обеспечения (автокликеров, макросов) для обхода кулдаунов в казино или кейсах.</li>
+                </ul>
+                <div class="rule-header">5. Система наказаний</div>
+                <ul class="rule-list">
+                    <li>⚠️ <b>Варн (предупреждение):</b> Выдается за мелкие нарушения. При накоплении 3-х варнов автоматически выдается бан на 7 дней.</li>
+                    <li>🚫 <b>Бан:</b> Выдается за серьезные нарушения (мошенничество, обход правил, агрессия). Срок может составлять от 1 дня до пожизненного.</li>
+                    <li>🗑️ <b>Удаление аккаунта:</b> Применяется к злостным читерам и нарушителям без права восстановления профиля.</li>
+                </ul>
+                <div class="memo-box">
+                    <h3>📌 Памятка</h3>
+                    <p>• Незнание правил не освобождает от ответственности.</p>
+                    <p>• Если вы увидели нарушителя — нажмите кнопку «Пожаловаться» (в анонимках) или напишите модератору.</p>
+                    <p>• Администрация всегда права. Решения модераторов не обсуждаются в общем чате.</p>
+                </div>
+            </div>
+
+            <div id="rule-group" class="rule-content">
+                <h1 class="neon-title">「 Т᧐чκᥲ ʙᴄᴛρᥱчᥙ 」</h1>
+                <p class="subtitle">Правила сетки и групп • October 22, 2026</p>
+                <div class="rule-header">1. Общение и уважение</div>
+                <ul class="rule-list">
+                    <li>Запрещены прямые оскорбления, унижения личности, разжигание межнациональных или религиозных конфликтов.</li>
+                    <li>Запрещен спам, массовый флуд.</li>
+                </ul>
+                <div class="rule-header">2. Контент</div>
+                <ul class="rule-list">
+                    <li>Строго запрещена публикация контента 18+ (порнография), шок-контента (сцены насилия) и призывов к экстремизму.</li>
+                    <li>Реклама сторонних ресурсов, ботов, чатов и каналов разрешена только с личного согласия владельца проекта — <b>@Kaoruko_off</b>.</li>
+                </ul>
+                <div class="rule-header">3. Конфликты</div>
+                <ul class="rule-list">
+                    <li>Решайте личные конфликты в личных сообщениях. Публичные разборки будут пресекаться модераторами.</li>
+                    <li>Не обсуждайте действия администрации в общем чате. Для этого есть ЛС владельца или модераторов.</li>
+                </ul>
+                <div class="rule-header">4. Наказания в группе</div>
+                <ul class="rule-list">
+                    <li>🔇 <b>Мут:</b> Выдается за флуд, спам или чрезмерную нецензурную лексику. Срок: от 1 часа до 24 часов.</li>
+                    <li>🚫 <b>Бан:</b> Выдается за агрессию, рекламу, повторное нарушение правил после мута. Срок: от 1 дня до навсегда.</li>
+                </ul>
+                <div class="memo-box">
+                    <h3>📌 Памятка</h3>
+                    <p>• Незнание правил не освобождает от ответственности.</p>
+                    <p>• Если вы увидели нарушителя — нажмите кнопку «Пожаловаться» (в анонимках) или напишите модератору.</p>
+                    <p>• Администрация всегда права. Решения модераторов не обсуждаются в общем чате.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно -->
     <div id="modal" class="modal-overlay">
         <div class="modal-content"><h3 id="modal-title" style="margin-top:0;">Крутим...</h3><div id="modal-body" class="case-grid"></div><p id="modal-desc" style="font-weight: 600;"></p><button id="modal-btn" class="btn" style="display:none; margin-top: 10px;" onclick="closeModal()">ОК</button></div>
     </div>
 
-    <!-- Навигация -->
+    <!-- Нижнее меню -->
     <div class="bottom-nav">
         <button class="nav-btn active" id="nav-profile" onclick="switchTab('profile', this)"><span class="icon">👤</span> Профиль</button>
         <button class="nav-btn" id="nav-games" onclick="switchTab('games', this)"><span class="icon">🎮</span> Игры</button>
@@ -357,7 +344,7 @@
         tg.ready(); tg.expand();
         const API_URL = 'https://bot-1793434826-8925-ayzen.bothost.tech';
 
-        // ─── ПЛАВНАЯ СМЕНА ТЕМЫ ───
+        // ─── ТЕМА ───
         function applyTheme(theme) {
             const body = document.body;
             const btn = document.getElementById('theme-btn-settings');
@@ -382,7 +369,7 @@
             applyTheme(savedTheme);
         };
 
-        // ─── ПЛАВНОЕ ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК ───
+        // ─── ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК ───
         let currentTabIndex = 0;
         const tabs = ['profile', 'games', 'top', 'shop', 'settings', 'rules'];
 
@@ -400,10 +387,10 @@
             const nextScreen = document.getElementById(`screen-${tabId}`);
             if (nextScreen) {
                 nextScreen.style.display = 'flex';
-                // Перезапуск анимации
-                nextScreen.classList.remove('fade-in');
-                void nextScreen.offsetWidth;
-                nextScreen.classList.add('fade-in');
+                // Перезапуск анимации подъема
+                nextScreen.style.animation = 'none';
+                void nextScreen.offsetWidth; 
+                nextScreen.style.animation = null; 
             }
 
             // Обновляем кнопки меню
@@ -420,49 +407,19 @@
             if(tabId === 'top') loadTop();
 
             currentTabIndex = newIndex;
+            window.scrollTo(0, 0); // Скроллим вверх
         }
 
         // ─── ЛОГИКА ПРАВИЛ ───
         function switchRules(type, btn) {
             document.querySelectorAll('.rule-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.rules-tab').forEach(el => el.classList.remove('active'));
-            
             document.getElementById(`rule-${type}`).classList.add('active');
             btn.classList.add('active');
             tg.HapticFeedback.impactOccurred('light');
         }
 
-        // ─── СВАЙПЫ ───
-        let touchStartX = 0;
-        let touchEndX = 0;
-
-        document.addEventListener('touchstart', e => {
-            touchStartX = e.changedTouches[0].screenX;
-        }, { passive: true });
-
-        document.addEventListener('touchend', e => {
-            touchEndX = e.changedTouches[0].screenX;
-            handleSwipe();
-        }, { passive: true });
-
-        function handleSwipe() {
-            const swipeThreshold = 50;
-            const diff = touchStartX - touchEndX;
-
-            if (tabs[currentTabIndex] === 'rules') return;
-
-            if (diff > swipeThreshold) {
-                if (currentTabIndex < 4) {
-                    switchTab(tabs[currentTabIndex + 1]);
-                }
-            }
-            if (diff < -swipeThreshold) {
-                if (currentTabIndex > 0) {
-                    switchTab(tabs[currentTabIndex - 1]);
-                }
-            }
-        }
-
+        // ─── API ───
         async function loadProfile() {
             try {
                 const response = await fetch(`${API_URL}/api/profile`, { headers: { 'X-Telegram-Init-Data': tg.initData } });
@@ -691,4 +648,4 @@
         loadProfile();
     </script>
 </body>
-            </html>
+    </html>
