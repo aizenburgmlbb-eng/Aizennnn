@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Вход</title>
+</head>
+<body>
+    <h1>Вход</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, msg in messages %}
+            <p style="color:red;">{{ msg }}</p>
+        {% endfor %}
+    {% endwith %}
+
+    <form method="post">
+        <p>Email: <input type="email" name="email" required></p>
+        <p>Пароль: <input type="password" name="password" required></p>
+        <button type="submit">Войти</button>
+    </form>
+
+    <p><a href="{{ url_for('auth.register') }}">Нет аккаунта? Зарегистрироваться</a></p>
+</body>
+</html>
