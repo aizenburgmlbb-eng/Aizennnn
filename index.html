@@ -63,6 +63,8 @@
         }
 
         .profile-header { display: flex; align-items: center; justify-content: space-between; }
+        
+        /* ═══ АВАТАРКА В ПРОФИЛЕ ═══ */
         .avatar {
             width: 100px; height: 100px; border-radius: 50%;
             background: linear-gradient(135deg, #F3A183, #D9734E);
@@ -70,8 +72,37 @@
             font-size: 36px; font-weight: 800; color: white;
             border: 3px solid var(--card-border); box-shadow: var(--shadow);
             flex-shrink: 0; overflow: hidden;
+            position: relative;
+            z-index: 1;
         }
-        .avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+
+        /* ═══ МАГИЯ ЗОЛОТОЙ ОБВОДКИ ДЛЯ ПРОФИЛЯ ═══ */
+        .avatar.vip-avatar {
+            border: 4px solid #FFD700;
+            box-shadow: 
+                0 0 20px #FFD700, 
+                0 0 40px rgba(255, 215, 0, 0.6),
+                inset 0 0 15px #FFD700;
+        }
+
+        .avatar.vip-avatar::before {
+            content: '';
+            position: absolute;
+            top: -12px; left: -12px; right: -12px; bottom: -12px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.5) 10%, transparent 10.01%) 0 0 / 15px 15px;
+            z-index: -1;
+            animation: sparkle 3s infinite linear;
+            opacity: 0.8;
+        }
+
+        @keyframes sparkle {
+            0% { transform: rotate(0deg); opacity: 0.8; }
+            50% { opacity: 1; }
+            100% { transform: rotate(360deg); opacity: 0.8; }
+        }
+
         .user-info { text-align: right; flex-grow: 1; margin-left: 15px; }
         .user-info h2 { margin: 0 0 4px 0; font-size: 24px; font-weight: 800; line-height: 1.2; }
         .level { font-size: 14px; color: var(--text-muted); font-weight: 600; margin-bottom: 8px; }
@@ -138,7 +169,6 @@
         }
         .top-item:last-child { border-bottom: none; }
         
-        /* Подсветка себя в топе */
         .top-item.is-me {
             background: rgba(0, 255, 255, 0.1);
             border: 1px solid rgba(0, 255, 255, 0.3);
@@ -157,20 +187,27 @@
             width: 45px !important; height: 45px !important; min-width: 45px;
             border-radius: 50%; background: #ccc; display: flex; align-items: center; justify-content: center; 
             overflow: hidden; font-weight: 800; color: #fff; flex-shrink: 0;
-            position: relative;
+            position: relative; z-index: 1;
         }
-        .top-avatar img { width: 100% !important; height: 100% !important; object-fit: cover; }
+        .top-avatar img { width: 100% !important; height: 100% !important; object-fit: cover; border-radius: 50%; }
 
-        /* Неоновая обводка для VIP в топе */
+        /* Золотая обводка для топа */
         .top-avatar.vip-avatar {
-            border: 2px solid #FFD700;
-            box-shadow: 0 0 10px #FFD700, 0 0 20px rgba(255, 215, 0, 0.5);
-            animation: vipPulse 2s infinite alternate;
+            border: 3px solid #FFD700;
+            box-shadow: 
+                0 0 15px #FFD700, 
+                0 0 30px rgba(255, 215, 0, 0.6),
+                inset 0 0 10px #FFD700;
         }
-        
-        @keyframes vipPulse {
-            from { box-shadow: 0 0 5px #FFD700, 0 0 10px rgba(255, 215, 0, 0.5); }
-            to { box-shadow: 0 0 15px #FFD700, 0 0 25px rgba(255, 215, 0, 0.8); }
+        .top-avatar.vip-avatar::before {
+            content: '';
+            position: absolute;
+            top: -8px; left: -8px; right: -8px; bottom: -8px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.4) 10%, transparent 10.01%) 0 0 / 10px 10px;
+            z-index: -1;
+            animation: sparkle 3s infinite linear;
+            opacity: 0.7;
         }
         
         .top-text-block { 
@@ -380,7 +417,7 @@
         const tg = window.Telegram.WebApp;
         tg.ready(); tg.expand();
         const API_URL = 'https://bot-1793434826-8925-ayzen.bothost.tech';
-        let myUserId = null; // Сохраняем ID текущего игрока
+        let myUserId = null;
 
         // ─── ТЕМА ───
         function applyTheme(theme) {
@@ -415,23 +452,19 @@
             const newIndex = tabs.indexOf(tabId);
             if (newIndex === currentTabIndex) return;
 
-            // Скрываем все экраны
             tabs.forEach(id => {
                 const el = document.getElementById(`screen-${id}`);
                 if (el) el.style.display = 'none';
             });
             
-            // Показываем нужный
             const nextScreen = document.getElementById(`screen-${tabId}`);
             if (nextScreen) {
                 nextScreen.style.display = 'flex';
-                // Перезапуск анимации подъема
                 nextScreen.style.animation = 'none';
                 void nextScreen.offsetWidth; 
                 nextScreen.style.animation = null; 
             }
 
-            // Обновляем кнопки меню
             document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
             if (btnElement) {
                 btnElement.classList.add('active');
@@ -440,15 +473,13 @@
                 if (settingsBtn && tabId === 'rules') settingsBtn.classList.add('active');
             }
 
-            // Загружаем данные
             if(tabId === 'games' || tabId === 'shop') renderShop(); 
             if(tabId === 'top') loadTop();
 
             currentTabIndex = newIndex;
-            window.scrollTo(0, 0); // Скроллим вверх
+            window.scrollTo(0, 0);
         }
 
-        // ─── ЛОГИКА ПРАВИЛ ───
         function switchRules(type, btn) {
             document.querySelectorAll('.rule-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.rules-tab').forEach(el => el.classList.remove('active'));
@@ -463,7 +494,7 @@
                 const response = await fetch(`${API_URL}/api/profile`, { headers: { 'X-Telegram-Init-Data': tg.initData } });
                 if (!response.ok) throw new Error('Ошибка сервера');
                 const data = await response.json();
-                myUserId = data.user_id; // Запоминаем свой ID
+                myUserId = data.user_id;
                 renderProfile(data);
             } catch (error) {
                 document.getElementById('screen-profile').innerHTML = `<div class="card" style="text-align: center; color: #FF6B6B;">Ошибка: ${error.message}</div>`;
@@ -473,6 +504,11 @@
         function renderProfile(data) {
             const initial = data.name.charAt(0).toUpperCase();
             let avatarContent = data.avatar_url ? `<img src="${data.avatar_url}">` : `<span>${initial}</span>`;
+            
+            // Добавляем класс vip-avatar, если есть VIP
+            let avatarClass = "avatar"; 
+            if (data.vip) avatarClass += " vip-avatar";
+
             let vipLine = data.vip ? `<div class="status-badge" style="background:#FFD700; color:#000;">👑 VIP: ${data.vip_days} дн.</div>` : '';
             
             let idLine = `<div class="status-badge">ID: ${data.custom_id}</div>`;
@@ -510,7 +546,7 @@
 
             document.getElementById('screen-profile').innerHTML = `
                 <div class="card profile-header">
-                    <div class="avatar">${avatarContent}</div>
+                    <div class="${avatarClass}">${avatarContent}</div>
                     <div class="user-info">
                         <h2>${data.name}</h2>
                         <div class="level">Уровень ${data.level}: ${data.level_title}</div>
@@ -576,9 +612,7 @@
                     let c_id = item.custom_id || 0;
                     let bal = item.balance || 0;
                     
-                    // Проверяем VIP статус для обводки (по ID)
                     let isVip = item.vip ? 'vip-avatar' : ''; 
-                    // Проверяем, это я или нет
                     let isMe = (item.user_id && item.user_id === myUserId) ? 'is-me' : '';
 
                     html += `
@@ -597,7 +631,6 @@
             }
         }
 
-        // ─── МОДАЛЬНОЕ ОКНО ───
         function showModalResult(title, bodyHtml, descHtml, btnText = "ОК") {
             const modal = document.getElementById('modal');
             document.getElementById('modal-title').innerText = title;
