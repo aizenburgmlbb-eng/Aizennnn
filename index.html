@@ -10,11 +10,11 @@
         :root {
             --text-main: #FFFFFF;
             --text-muted: #A8D6FF;
-            --card-bg: rgba(10, 25, 50, 0.6);
+            --card-bg: rgba(15, 30, 60, 0.6);
             --card-border: rgba(168, 214, 255, 0.4);
             --accent: #00E5FF;
             --shadow: 0 8px 32px rgba(0, 229, 255, 0.15);
-            --nav-bg: rgba(5, 15, 35, 0.85);
+            --nav-bg: rgba(10, 20, 40, 0.85);
         }
 
         body {
@@ -58,7 +58,7 @@
         .overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(rgba(0, 10, 30, 0.5), rgba(0, 5, 15, 0.8));
+            background: linear-gradient(rgba(0, 10, 30, 0.4), rgba(0, 5, 15, 0.7));
             z-index: -1;
         }
 
@@ -79,45 +79,30 @@
             backdrop-filter: blur(15px); 
             -webkit-backdrop-filter: blur(15px);
             border-radius: 24px; padding: 18px; 
-            border: 1px solid transparent;
-            background-clip: padding-box;
+            border: 1px solid var(--card-border);
             position: relative;
             box-shadow: var(--shadow);
-            /* overflow: hidden;  <-- УБЕРИ, если он есть, чтобы сосульки не обрезались */
         }
-        
-        /* Ледяная обводка */
+
+        /* Ледяной блик сверху карточки */
         .card::before {
             content: '';
             position: absolute;
-            top: -1px; left: -1px; right: -1px; bottom: -1px;
-            background: linear-gradient(135deg, rgba(255,255,255,0.7), rgba(0, 229, 255, 0.1), rgba(255,255,255,0.3));
-            border-radius: 24px;
-            z-index: -1;
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
+            top: 0; left: 0; right: 0; height: 50%;
+            background: linear-gradient(180deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 100%);
+            border-radius: 24px 24px 0 0;
             pointer-events: none;
         }
 
-        /* ═══ СОСУЛЬКИ НА КАРТОЧКАХ ═══ */
+        /* Снежинка в углу карточки */
         .card::after {
-            content: '';
+            content: '❄';
             position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 20px;
-            background-image: 
-                radial-gradient(circle at 10% 0%, rgba(255,255,255,0.9) 3px, transparent 4px),
-                radial-gradient(circle at 20% 0%, rgba(255,255,255,0.8) 2px, transparent 3px),
-                radial-gradient(circle at 35% 0%, rgba(255,255,255,0.9) 4px, transparent 5px),
-                radial-gradient(circle at 50% 0%, rgba(255,255,255,0.7) 2px, transparent 3px),
-                radial-gradient(circle at 65% 0%, rgba(255,255,255,0.9) 3px, transparent 4px),
-                radial-gradient(circle at 80% 0%, rgba(255,255,255,0.8) 2px, transparent 3px),
-                radial-gradient(circle at 90% 0%, rgba(255,255,255,0.9) 4px, transparent 5px);
-            background-size: 100% 100%;
+            top: 10px; right: 15px;
+            font-size: 24px;
+            color: rgba(255,255,255,0.3);
             pointer-events: none;
-            z-index: 5;
-            filter: drop-shadow(0 2px 3px rgba(0, 229, 255, 0.5));
+            filter: drop-shadow(0 0 5px var(--accent));
         }
 
         .profile-header { display: flex; align-items: center; justify-content: space-between; }
@@ -159,11 +144,14 @@
         .stat-value { font-size: 22px; font-weight: 800; color: var(--accent); }
         .stat-label { font-size: 13px; color: var(--text-muted); font-weight: 800; }
 
+        /* КНОПКИ */
         .btn {
-            width: 100%; padding: 16px; background: var(--accent); color: #000;
-            border: none; border-radius: 16px; font-size: 16px; font-weight: 800;
+            padding: 12px 20px; background: var(--accent); color: #000;
+            border: none; border-radius: 12px; font-size: 15px; font-weight: 800;
             font-family: inherit; cursor: pointer; box-shadow: 0 4px 15px rgba(0, 229, 255, 0.3);
             transition: transform 0.1s, background 0.2s;
+            display: inline-block;
+            white-space: nowrap;
         }
         .btn:active:not(:disabled) { transform: scale(0.96); }
         .btn:disabled { background: #4B5563; color: #9CA3AF; box-shadow: none; cursor: not-allowed; opacity: 0.7; }
@@ -187,12 +175,14 @@
         .nav-btn.active { color: var(--accent); text-shadow: 0 0 10px var(--accent); }
         .nav-btn span.icon { font-size: 22px; }
 
+        /* СТРОКИ В МАГАЗИНЕ */
         .item-card {
             display: flex; justify-content: space-between; align-items: center;
             padding: 14px; background: rgba(0, 0, 0, 0.2); border-radius: 16px;
             margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.1);
             text-decoration: none; color: inherit;
         }
+        .item-info { flex-grow: 1; margin-right: 10px; }
         .item-info h4 { margin: 0 0 4px; font-size: 16px; }
         .item-info p { margin: 0; font-size: 13px; color: var(--text-muted); }
 
@@ -287,7 +277,7 @@
         <div class="card"><h2 style="margin-top:0; text-align:center;">👑 Покупка VIP</h2>
             <div class="item-card" onclick="buyVipStars()">
                 <div class="item-info"><h4>VIP на 7 дней</h4><p>Ускоренный доход, защита от варнов</p></div>
-                <div style="font-weight: 800; color: #e6a817;">10 ⭐</div>
+                <div style="font-weight: 800; color: #e6a817; white-space: nowrap;">10 ⭐</div>
             </div>
         </div>
         <div class="card"><h2 style="margin-top:0;">🔗 Ссылки</h2>
@@ -302,7 +292,7 @@
             <p style="color:var(--text-muted); font-size:14px; margin-bottom: 0;">Управление интерфейсом</p>
         </div>
         <div class="card">
-            <button class="btn" onclick="switchTab('rules')">📜 Правила бота и группы</button>
+            <button class="btn" style="width: 100%;" onclick="switchTab('rules')">📜 Правила бота и группы</button>
         </div>
         <div class="card" style="text-align: center; padding: 20px;">
             <p style="color:var(--text-muted); font-size:13px; margin: 0;">Версия приложения: 1.3.0 ❄️</p>
@@ -393,7 +383,7 @@
             <h3 id="modal-title" style="margin-top:0;">Крутим...</h3>
             <div id="modal-body" class="case-grid"></div>
             <p id="modal-desc" style="font-weight: 600;"></p>
-            <button id="modal-btn" class="btn" style="display:none; margin-top: 10px;" onclick="closeModal()">ОК</button>
+            <button id="modal-btn" class="btn" style="display:none; margin-top: 10px; width: 100%;" onclick="closeModal()">ОК</button>
         </div>
     </div>
 
@@ -512,7 +502,7 @@
                             <div class="wheel" id="wheel"></div>
                             <div class="wheel-center"></div>
                         </div>
-                        <button class="btn" onclick="spinWheel(this)" id="wheel-btn" style="margin-top: 20px;">Крутить колесо</button>
+                        <button class="btn" style="width: 100%;" onclick="spinWheel(this)" id="wheel-btn" style="margin-top: 20px;">Крутить колесо</button>
                     </div>
                 `;
             } else {
@@ -635,9 +625,9 @@
         function renderShop() {
             document.getElementById('vip-list').innerHTML = `
                 <div class="card">
-                    <div class="item-card"><div class="item-info"><h4>1 неделя</h4><p>4 000 msg</p></div><button class="btn" style="width: auto; padding: 8px 16px;" onclick="buyVip(1)">Купить</button></div>
-                    <div class="item-card"><div class="item-info"><h4>2 недели</h4><p>8 000 msg</p></div><button class="btn" style="width: auto; padding: 8px 16px;" onclick="buyVip(2)">Купить</button></div>
-                    <div class="item-card"><div class="item-info"><h4>3 недели</h4><p>12 000 msg</p></div><button class="btn" style="width: auto; padding: 8px 16px;" onclick="buyVip(3)">Купить</button></div>
+                    <div class="item-card"><div class="item-info"><h4>1 неделя</h4><p>4 000 msg</p></div><button class="btn" onclick="buyVip(1)">Купить</button></div>
+                    <div class="item-card"><div class="item-info"><h4>2 недели</h4><p>8 000 msg</p></div><button class="btn" onclick="buyVip(2)">Купить</button></div>
+                    <div class="item-card"><div class="item-info"><h4>3 недели</h4><p>12 000 msg</p></div><button class="btn" onclick="buyVip(3)">Купить</button></div>
                 </div>
             `;
             const cases = [
@@ -646,13 +636,13 @@
                 {id: "petrarecase", name: "🐾 Редкий питомец", price: 5000}, {id: "weddingcase", name: "💍 Свадебный", price: 0},
             ];
             let casesHtml = '<div class="card">';
-            cases.forEach(c => { casesHtml += `<div class="item-card"><div class="item-info"><h4>${c.name}</h4><p>${c.price > 0 ? c.price.toLocaleString() + ' msg' : 'Бесплатно'}</p></div><button class="btn" style="width: auto; padding: 8px 16px;" onclick="openCase('${c.id}')">Открыть</button></div>`; });
+            cases.forEach(c => { casesHtml += `<div class="item-card"><div class="item-info"><h4>${c.name}</h4><p>${c.price > 0 ? c.price.toLocaleString() + ' msg' : 'Бесплатно'}</p></div><button class="btn" onclick="openCase('${c.id}')">Открыть</button></div>`; });
             casesHtml += '</div>';
             document.getElementById('cases-list').innerHTML = casesHtml;
 
             const starsPkgs = [{msg: "1 000", stars: 1}, {msg: "5 000", stars: 5}, {msg: "110 000", stars: 100}, {msg: "230 000", stars: 200}, {msg: "600 000", stars: 500}, {msg: "1 000 000", stars: 1000}];
             let starsHtml = '';
-            starsPkgs.forEach(p => { starsHtml += `<div class="item-card" onclick="buyStars(${p.stars})"><div class="item-info"><h4>${p.msg} msg</h4></div><div style="font-weight: 800; color: #e6a817;">${p.stars} ⭐</div></div>`; });
+            starsPkgs.forEach(p => { starsHtml += `<div class="item-card" onclick="buyStars(${p.stars})"><div class="item-info"><h4>${p.msg} msg</h4></div><div style="font-weight: 800; color: #e6a817; white-space: nowrap;">${p.stars} ⭐</div></div>`; });
             document.getElementById('stars-list').innerHTML = starsHtml;
         }
 
@@ -781,4 +771,4 @@
         loadProfile();
     </script>
 </body>
-    </html>
+            </html>
