@@ -3,44 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Амина</title>
+    <title>Амина | Новый Год</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --text-main: #1C1C1E;
-            --text-muted: #636366;
-            --card-bg: rgba(255, 255, 255, 0.4); 
-            --card-border: rgba(255, 255, 255, 0.6);
-            --accent: #8A2BE2; 
-            --bg-image: url('/api/bg?theme=light');
-            --shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            --nav-bg: rgba(255, 255, 255, 0.5);
-        }
-
-        body[data-theme="dark"] {
             --text-main: #FFFFFF;
-            --text-muted: #EBEBF5;
-            --card-bg: rgba(30, 30, 40, 0.4); 
-            --card-border: rgba(255, 255, 255, 0.15);
-            --accent: #00FFFF; 
-            --bg-image: url('/api/bg?theme=dark');
-            --shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-            --nav-bg: rgba(30, 30, 40, 0.6);
-        }
-
-        body, .card, .bottom-nav, .status-badge, .item-card, .theme-btn, .rules-tab, .rule-header, .finance-item, .top-item {
-            transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+            --text-muted: #A8D6FF;
+            --card-bg: rgba(15, 30, 60, 0.45);
+            --card-border: rgba(168, 214, 255, 0.4);
+            --accent: #00E5FF;
+            --shadow: 0 8px 32px rgba(0, 229, 255, 0.15);
+            --nav-bg: rgba(10, 20, 40, 0.7);
         }
 
         body {
             margin: 0; padding: 15px; padding-bottom: 90px;
             font-family: 'Nunito', sans-serif; color: var(--text-main);
-            background-color: #1a1a2e;
-            background-image: var(--bg-image);
-            background-size: cover; background-position: center; background-attachment: fixed;
+            background-color: #000;
             min-height: 100vh; box-sizing: border-box;
             overflow-x: hidden; 
+        }
+
+        /* ═══ ВИДЕО НА ФОНЕ ═══ */
+        #bg-video {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            object-fit: cover;
+            z-index: -2;
+            opacity: 0.8;
+        }
+
+        /* Затемняющий слой для читаемости */
+        .overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(rgba(0, 10, 30, 0.6), rgba(0, 5, 15, 0.9));
+            z-index: -1;
         }
 
         .app-container { 
@@ -53,39 +53,52 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* ═══ МОРОЗНОЕ СТЕКЛО (КАРТОЧКИ) ═══ */
         .card {
             background: var(--card-bg); 
-            backdrop-filter: blur(25px); 
-            -webkit-backdrop-filter: blur(25px);
+            backdrop-filter: blur(15px); 
+            -webkit-backdrop-filter: blur(15px);
             border-radius: 24px; padding: 18px; 
-            border: 1px solid var(--card-border);
+            border: 1px solid transparent;
+            background-clip: padding-box;
+            position: relative;
             box-shadow: var(--shadow);
+        }
+        
+        /* Ледяная обводка */
+        .card::before {
+            content: '';
+            position: absolute;
+            top: -1px; left: -1px; right: -1px; bottom: -1px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.8), rgba(0, 229, 255, 0.1), rgba(255,255,255,0.4));
+            border-radius: 24px;
+            z-index: -1;
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
         }
 
         .profile-header { display: flex; align-items: center; justify-content: space-between; }
         
-        /* ═══ АВАТАРКА В ПРОФИЛЕ ═══ */
+        /* АВАТАРКА */
         .avatar {
             width: 100px; height: 100px; border-radius: 50%;
-            background: linear-gradient(135deg, #F3A183, #D9734E);
+            background: linear-gradient(135deg, #1E3A8A, #00E5FF);
             display: flex; align-items: center; justify-content: center;
             font-size: 36px; font-weight: 800; color: white;
-            border: 3px solid var(--card-border); box-shadow: var(--shadow);
+            border: 3px solid var(--accent); box-shadow: 0 0 15px var(--accent);
             flex-shrink: 0; overflow: hidden;
             position: relative;
             z-index: 1;
         }
         .avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
 
-        /* ═══ МАГИЯ ЗОЛОТОЙ ОБВОДКИ ДЛЯ ПРОФИЛЯ ═══ */
+        /* VIP Обводка в профиле */
         .avatar.vip-avatar {
             border: 4px solid #FFD700;
-            box-shadow: 
-                0 0 20px #FFD700, 
-                0 0 40px rgba(255, 215, 0, 0.6),
-                inset 0 0 15px #FFD700;
+            box-shadow: 0 0 20px #FFD700, 0 0 40px rgba(255, 215, 0, 0.6), inset 0 0 15px #FFD700;
         }
-
         .avatar.vip-avatar::before {
             content: '';
             position: absolute;
@@ -96,7 +109,6 @@
             animation: sparkle 3s infinite linear;
             opacity: 0.8;
         }
-
         @keyframes sparkle {
             0% { transform: rotate(0deg); opacity: 0.8; }
             50% { opacity: 1; }
@@ -104,78 +116,76 @@
         }
 
         .user-info { text-align: right; flex-grow: 1; margin-left: 15px; }
-        .user-info h2 { margin: 0 0 4px 0; font-size: 24px; font-weight: 800; line-height: 1.2; }
+        .user-info h2 { margin: 0 0 4px 0; font-size: 24px; font-weight: 800; line-height: 1.2; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
         .level { font-size: 14px; color: var(--text-muted); font-weight: 600; margin-bottom: 8px; }
         
         .status-badge {
-            display: inline-block; background: rgba(217, 115, 78, 0.15); color: var(--accent);
+            display: inline-block; background: rgba(0, 229, 255, 0.15); color: var(--accent);
             padding: 4px 10px; border-radius: 12px; font-size: 13px; font-weight: 800;
-            margin-top: 4px; margin-left: 4px; border: 1px solid var(--card-border);
+            margin-top: 4px; margin-left: 4px; border: 1px solid rgba(0, 229, 255, 0.3);
         }
 
         .finance-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .finance-item { text-align: center; padding: 12px; background: rgba(255, 255, 255, 0.1); border-radius: 16px; border: 1px solid var(--card-border); }
+        .finance-item { text-align: center; padding: 12px; background: rgba(0, 0, 0, 0.2); border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); }
         .finance-label { font-size: 14px; color: var(--text-muted); margin-bottom: 4px; font-weight: 800; }
         .finance-value { font-size: 22px; font-weight: 800; }
 
         .stats-row { display: flex; justify-content: space-around; text-align: center; }
-        .stat-item { flex: 1; border-right: 1px solid var(--card-border); }
+        .stat-item { flex: 1; border-right: 1px solid rgba(255,255,255,0.1); }
         .stat-item:last-child { border-right: none; }
         .stat-value { font-size: 22px; font-weight: 800; color: var(--accent); }
         .stat-label { font-size: 13px; color: var(--text-muted); font-weight: 800; }
 
+        /* КНОПКИ */
         .btn {
-            width: 100%; padding: 16px; background: var(--accent); color: white;
+            width: 100%; padding: 16px; background: var(--accent); color: #000;
             border: none; border-radius: 16px; font-size: 16px; font-weight: 800;
-            font-family: inherit; cursor: pointer; box-shadow: var(--shadow);
+            font-family: inherit; cursor: pointer; box-shadow: 0 4px 15px rgba(0, 229, 255, 0.3);
             transition: transform 0.1s, background 0.2s;
         }
         .btn:active:not(:disabled) { transform: scale(0.96); }
-        .btn:disabled { background: #C4B6B0; box-shadow: none; cursor: not-allowed; opacity: 0.7; }
+        .btn:disabled { background: #4B5563; color: #9CA3AF; box-shadow: none; cursor: not-allowed; opacity: 0.7; }
 
-        .progress-bar-bg { width: 100%; height: 12px; background: rgba(0,0,0,0.2); border-radius: 10px; overflow: hidden; margin-top: 8px; }
-        .progress-bar-fill { height: 100%; background: var(--accent); border-radius: 10px; }
+        .progress-bar-bg { width: 100%; height: 12px; background: rgba(0,0,0,0.4); border-radius: 10px; overflow: hidden; margin-top: 8px; }
+        .progress-bar-fill { height: 100%; background: var(--accent); border-radius: 10px; box-shadow: 0 0 10px var(--accent); }
 
+        /* НИЖНЕЕ МЕНЮ */
         .bottom-nav {
             position: fixed; bottom: 0; left: 0; right: 0;
             background: var(--nav-bg); 
             backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
             display: flex; justify-content: space-around; padding: 10px 0 25px;
             border-top: 1px solid var(--card-border); 
-            box-shadow: 0 -4px 15px rgba(0,0,0,0.1); z-index: 100;
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.3); z-index: 100;
         }
         .nav-btn {
             background: none; border: none; font-size: 11px; font-weight: 800;
             color: var(--text-muted); display: flex; flex-direction: column; align-items: center;
             gap: 4px; cursor: pointer; transition: color 0.3s;
         }
-        .nav-btn.active { color: var(--accent); }
+        .nav-btn.active { color: var(--accent); text-shadow: 0 0 10px var(--accent); }
         .nav-btn span.icon { font-size: 22px; }
 
         .item-card {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 14px; background: rgba(255, 255, 255, 0.1); border-radius: 16px;
-            margin-bottom: 10px; border: 1px solid var(--card-border);
+            padding: 14px; background: rgba(0, 0, 0, 0.2); border-radius: 16px;
+            margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.1);
             text-decoration: none; color: inherit;
         }
         .item-info h4 { margin: 0 0 4px; font-size: 16px; }
         .item-info p { margin: 0; font-size: 13px; color: var(--text-muted); }
 
-        /* ═══ СТИЛИ ДЛЯ ТОПА ═══ */
+        /* СТИЛИ ДЛЯ ТОПА */
         .top-item { 
             display: flex; align-items: center; gap: 10px; padding: 12px 10px; 
-            border-bottom: 1px solid var(--card-border); border-radius: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.1); border-radius: 12px;
             transition: background 0.2s;
         }
         .top-item:last-child { border-bottom: none; }
         
         .top-item.is-me {
-            background: rgba(0, 255, 255, 0.1);
-            border: 1px solid rgba(0, 255, 255, 0.3);
-        }
-        body[data-theme="light"] .top-item.is-me {
-            background: rgba(138, 43, 226, 0.1);
-            border: 1px solid rgba(138, 43, 226, 0.3);
+            background: rgba(0, 229, 255, 0.1);
+            border: 1px solid rgba(0, 229, 255, 0.3);
         }
 
         .top-place { 
@@ -185,19 +195,16 @@
         
         .top-avatar { 
             width: 45px !important; height: 45px !important; min-width: 45px;
-            border-radius: 50%; background: #ccc; display: flex; align-items: center; justify-content: center; 
+            border-radius: 50%; background: #1E3A8A; display: flex; align-items: center; justify-content: center; 
             overflow: hidden; font-weight: 800; color: #fff; flex-shrink: 0;
             position: relative; z-index: 1;
+            border: 2px solid rgba(255,255,255,0.2);
         }
         .top-avatar img { width: 100% !important; height: 100% !important; object-fit: cover; border-radius: 50%; }
 
-        /* Золотая обводка для топа */
         .top-avatar.vip-avatar {
             border: 3px solid #FFD700;
-            box-shadow: 
-                0 0 15px #FFD700, 
-                0 0 30px rgba(255, 215, 0, 0.6),
-                inset 0 0 10px #FFD700;
+            box-shadow: 0 0 15px #FFD700, 0 0 30px rgba(255, 215, 0, 0.6), inset 0 0 10px #FFD700;
         }
         .top-avatar.vip-avatar::before {
             content: '';
@@ -219,47 +226,53 @@
         .wheel {
             width: 200px; height: 200px; border-radius: 50%;
             background: conic-gradient(
-                #FF6B6B 0deg 51.4deg, #4ECDC4 51.4deg 102.8deg, #45B7D1 102.8deg 154.2deg, 
-                #FDCB6E 154.2deg 205.7deg, #A29BFE 205.7deg 257.1deg, #FD79A8 257.1deg 308.5deg, #B2BEC3 308.5deg 360deg
+                #00E5FF 0deg 51.4deg, #1E3A8A 51.4deg 102.8deg, #00E5FF 102.8deg 154.2deg, 
+                #1E3A8A 154.2deg 205.7deg, #00E5FF 205.7deg 257.1deg, #1E3A8A 257.1deg 308.5deg, #00E5FF 308.5deg 360deg
             );
-            border: 8px solid var(--card-border); box-shadow: var(--shadow);
+            border: 8px solid #FFF; box-shadow: 0 0 30px var(--accent);
             position: relative; transition: transform 3s cubic-bezier(0.1, 0.8, 0.1, 1);
         }
-        .wheel-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 40px; height: 40px; background: #FFF; border-radius: 50%; box-shadow: 0 0 10px rgba(0,0,0,0.3); z-index: 10; }
-        .wheel-arrow { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 20px solid var(--accent); z-index: 20; }
+        .wheel-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 40px; height: 40px; background: #FFF; border-radius: 50%; box-shadow: 0 0 20px rgba(0,0,0,0.5); z-index: 10; }
+        .wheel-arrow { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 20px solid var(--accent); z-index: 20; filter: drop-shadow(0 0 5px var(--accent)); }
 
-        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); display: none; justify-content: center; align-items: center; z-index: 1000; }
-        .modal-content { background: var(--card-bg); border: 1px solid var(--card-border); padding: 30px; border-radius: 24px; text-align: center; width: 85%; max-width: 340px; box-shadow: var(--shadow); transform: scale(0.9); transition: transform 0.3s ease; }
+        /* МОДАЛЬНОЕ ОКНО */
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); display: none; justify-content: center; align-items: center; z-index: 1000; }
+        .modal-content { background: var(--card-bg); border: 1px solid var(--accent); padding: 30px; border-radius: 24px; text-align: center; width: 85%; max-width: 340px; box-shadow: 0 0 30px rgba(0, 229, 255, 0.3); transform: scale(0.9); transition: transform 0.3s ease; }
         .modal-overlay.show .modal-content { transform: scale(1); }
         
         .case-grid { font-size: 32px; line-height: 1.5; margin: 15px 0; }
         .casino-slots { font-size: 40px; margin: 20px 0; display: flex; justify-content: space-around;}
 
-        .theme-switch-container { display: flex; align-items: center; justify-content: space-between; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 16px; border: 1px solid var(--card-border); margin-top: 10px; }
+        .theme-switch-container { display: flex; align-items: center; justify-content: space-between; padding: 15px; background: rgba(0,0,0,0.2); border-radius: 16px; border: 1px solid var(--card-border); margin-top: 10px; }
         .theme-switch-container h4 { margin: 0; font-size: 16px; }
-        .theme-btn { background: var(--card-bg); border: 1px solid var(--card-border); padding: 10px 20px; border-radius: 12px; font-weight: 800; font-size: 16px; color: var(--text-main); cursor: pointer; transition: transform 0.2s; }
-        .theme-btn:active { transform: scale(0.95); }
 
+        /* ПРАВИЛА */
         .rules-tabs { display: flex; gap: 10px; margin-bottom: 20px; }
-        .rules-tab { flex: 1; padding: 12px; text-align: center; font-weight: 800; font-size: 15px; background: rgba(255,255,255,0.1); border-radius: 16px; cursor: pointer; border: 1px solid var(--card-border); transition: all 0.2s; color: var(--text-main); }
-        .rules-tab.active { background: var(--accent); color: #000; box-shadow: 0 4px 15px rgba(0, 255, 255, 0.3); }
+        .rules-tab { flex: 1; padding: 12px; text-align: center; font-weight: 800; font-size: 15px; background: rgba(0,0,0,0.2); border-radius: 16px; cursor: pointer; border: 1px solid var(--card-border); transition: all 0.2s; color: var(--text-main); }
+        .rules-tab.active { background: var(--accent); color: #000; box-shadow: 0 4px 15px rgba(0, 229, 255, 0.3); }
         .rule-content { display: none; }
         .rule-content.active { display: block; }
         .rule-header { color: var(--accent); font-size: 18px; font-weight: 800; margin-top: 25px; margin-bottom: 10px; border-bottom: 1px solid var(--card-border); padding-bottom: 8px; }
         .rule-list { margin: 0; padding-left: 20px; color: var(--text-main); font-size: 15px; line-height: 1.6; }
         .rule-list li { margin-bottom: 10px; }
         .rule-list li::marker { color: var(--accent); }
-        .memo-box { margin-top: 25px; padding: 15px; background: rgba(255, 255, 255, 0.05); border-radius: 16px; border: 1px solid var(--card-border); }
+        .memo-box { margin-top: 25px; padding: 15px; background: rgba(0, 0, 0, 0.2); border-radius: 16px; border: 1px solid var(--card-border); }
         .memo-box h3 { margin-top: 0; color: #FFD700; font-size: 16px; }
         .memo-box p { margin: 5px 0; font-size: 14px; color: var(--text-muted); }
-        .neon-title { margin-top: 0; font-size: 26px; font-weight: 800; text-align: center; background: linear-gradient(90deg, #8A2BE2, #00FFFF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 5px; filter: drop-shadow(0 0 8px rgba(0, 255, 255, 0.4)); }
+        .neon-title { margin-top: 0; font-size: 26px; font-weight: 800; text-align: center; background: linear-gradient(90deg, #00E5FF, #FFFFFF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 5px; filter: drop-shadow(0 0 8px rgba(0, 229, 255, 0.6)); }
         .subtitle { text-align: center; color: var(--text-muted); font-size: 14px; margin-top: 0; margin-bottom: 25px; }
     </style>
 </head>
-<body data-theme="dark">
+<body>
     
+    <!-- Видео на фоне -->
+    <video id="bg-video" autoplay loop muted playsinline>
+        <source src="/api/newyear_video" type="video/mp4">
+    </video>
+    <div class="overlay"></div>
+
     <div id="screen-profile" class="app-container">
-        <div style="color:var(--text-muted); text-align:center; margin-top:50px; font-weight: 800;">Загрузка... 🍂</div>
+        <div style="color:var(--text-muted); text-align:center; margin-top:50px; font-weight: 800;">Загрузка... ❄️</div>
     </div>
     
     <div id="screen-games" class="app-container" style="display: none;">
@@ -304,14 +317,10 @@
             <p style="color:var(--text-muted); font-size:14px; margin-bottom: 0;">Управление интерфейсом</p>
         </div>
         <div class="card">
-            <div class="theme-switch-container">
-                <h4>🎨 Тема оформления</h4>
-                <button class="theme-btn" id="theme-btn-settings" onclick="toggleThemeSettings()">🌙 Тёмная</button>
-            </div>
-            <button class="btn" style="margin-top: 15px; background: #8B7D73;" onclick="switchTab('rules')">📜 Правила бота и группы</button>
+            <button class="btn" onclick="switchTab('rules')">📜 Правила бота и группы</button>
         </div>
         <div class="card" style="text-align: center; padding: 20px;">
-            <p style="color:var(--text-muted); font-size:13px; margin: 0;">Версия приложения: 1.2.3</p>
+            <p style="color:var(--text-muted); font-size:13px; margin: 0;">Версия приложения: 1.3.0 ❄️</p>
         </div>
     </div>
 
@@ -324,7 +333,7 @@
 
             <div id="rule-bot" class="rule-content active">
                 <h1 class="neon-title">「 Амина 」</h1>
-                <p class="subtitle">Правила бота • October 22, 2026</p>
+                <p class="subtitle">Правила бота • Декабрь 2026</p>
                 <div class="rule-header">1. Общие положения</div>
                 <ul class="rule-list">
                     <li>Администрация проекта имеет право изменять правила, условия игр и наказывать нарушителей без предварительного уведомления.</li>
@@ -363,7 +372,7 @@
 
             <div id="rule-group" class="rule-content">
                 <h1 class="neon-title">「 Т᧐чκᥲ ʙᴄᴛρᥱчᥙ 」</h1>
-                <p class="subtitle">Правила сетки и групп • October 22, 2026</p>
+                <p class="subtitle">Правила сетки и групп • Декабрь 2026</p>
                 <div class="rule-header">1. Общение и уважение</div>
                 <ul class="rule-list">
                     <li>Запрещены прямые оскорбления, унижения личности, разжигание межнациональных или религиозных конфликтов.</li>
@@ -418,31 +427,6 @@
         tg.ready(); tg.expand();
         const API_URL = 'https://bot-1793434826-8925-ayzen.bothost.tech';
         let myUserId = null;
-
-        // ─── ТЕМА ───
-        function applyTheme(theme) {
-            const body = document.body;
-            const btn = document.getElementById('theme-btn-settings');
-            if (theme === 'light') {
-                body.setAttribute('data-theme', 'light');
-                btn.innerText = '☀️ Светлая';
-                localStorage.setItem('theme', 'light');
-            } else {
-                body.setAttribute('data-theme', 'dark');
-                btn.innerText = '🌙 Тёмная';
-                localStorage.setItem('theme', 'dark');
-            }
-        }
-
-        function toggleThemeSettings() {
-            const current = document.body.getAttribute('data-theme');
-            applyTheme(current === 'dark' ? 'light' : 'dark');
-        }
-
-        window.onload = function() {
-            const savedTheme = localStorage.getItem('theme') || 'dark';
-            applyTheme(savedTheme);
-        };
 
         // ─── ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК ───
         let currentTabIndex = 0;
@@ -505,7 +489,6 @@
             const initial = data.name.charAt(0).toUpperCase();
             let avatarContent = data.avatar_url ? `<img src="${data.avatar_url}">` : `<span>${initial}</span>`;
             
-            // Добавляем класс vip-avatar, если есть VIP
             let avatarClass = "avatar"; 
             if (data.vip) avatarClass += " vip-avatar";
 
@@ -800,4 +783,4 @@
         loadProfile();
     </script>
 </body>
-    </html>
+            </html>
