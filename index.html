@@ -9,11 +9,8 @@
     <style>
         :root {
             --text-main: #FFFFFF;
-            --text-muted: #A8D6FF;
-            --card-bg: rgba(10, 25, 50, 0.6);
-            --card-border: rgba(168, 214, 255, 0.4);
+            --text-muted: #D0E8FF;
             --accent: #00E5FF;
-            --shadow: 0 8px 32px rgba(0, 229, 255, 0.15);
             --nav-bg: rgba(5, 15, 35, 0.85);
         }
 
@@ -25,103 +22,132 @@
             overflow-x: hidden; 
         }
 
-        /* ═══ СНЕГОПАД ═══ */
-        .snow {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            pointer-events: none;
-            z-index: 0;
-        }
-        .snowflake {
-            position: absolute;
-            top: -10px;
-            color: #fff;
-            font-size: 1.5em;
-            opacity: 0.8;
-            animation: fall linear infinite;
-        }
-        @keyframes fall {
-            to { transform: translateY(105vh); }
-        }
-
-        /* ФОН */
+        /* ═══ ФОН ═══ */
         .bg-fixed {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100vw; height: 100vh;
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background-image: url('/api/newyear_bg');
-            background-size: cover;
-            background-position: center;
-            z-index: -2;
+            background-size: cover; background-position: center; z-index: -2;
         }
-
         .overlay {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(rgba(0, 10, 30, 0.4), rgba(0, 5, 15, 0.7));
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(rgba(0, 10, 30, 0.3), rgba(0, 5, 15, 0.6));
             z-index: -1;
         }
 
+        /* ═══ СНЕГОПАД НА ФОНЕ ═══ */
+        .snow { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 0; }
+        .snowflake { position: absolute; top: -10px; color: #fff; font-size: 1.5em; opacity: 0.8; animation: fall linear infinite; }
+        @keyframes fall { to { transform: translateY(105vh); } }
+
         .app-container { 
             display: flex; flex-direction: column; gap: 15px; max-width: 500px; margin: 0 auto; 
-            position: relative; z-index: 1;
-            animation: slideUpFade 0.3s ease-out forwards;
+            position: relative; z-index: 1; animation: slideUpFade 0.3s ease-out forwards;
         }
+        @keyframes slideUpFade { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-        @keyframes slideUpFade {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* МОРОЗНОЕ СТЕКЛО (Для всех вкладок) */
-        .card {
-            background: var(--card-bg); 
-            backdrop-filter: blur(15px); 
-            -webkit-backdrop-filter: blur(15px);
-            border-radius: 24px; padding: 18px; 
-            border: 1px solid var(--card-border);
+        /* ═══ ГЛАВНЫЕ ЛЕДЯНЫЕ ПАНЕЛИ (КАК НА ФОТО) ═══ */
+        .glass-panel {
+            background: linear-gradient(135deg, rgba(200, 230, 255, 0.2) 0%, rgba(100, 150, 255, 0.1) 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 20px 15px 15px 15px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), inset 0 0 20px rgba(255, 255, 255, 0.2);
             position: relative;
-            box-shadow: var(--shadow);
+            margin-bottom: 15px;
         }
 
-        /* Ледяной блик сверху карточки */
-        .card::before {
+        /* ═══ ЛЕДЯНЫЕ СОСУЛЬКИ СВЕРХУ ═══ */
+        .glass-panel::before {
             content: '';
             position: absolute;
-            top: 0; left: 0; right: 0; height: 50%;
-            background: linear-gradient(180deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 100%);
-            border-radius: 24px 24px 0 0;
+            top: -2px; left: 0; right: 0; height: 35px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 30' preserveAspectRatio='none'%3E%3Cpath d='M0,0 L100,0 L100,5 L95,15 L90,5 L85,25 L80,10 L75,20 L70,5 L65,18 L60,8 L55,25 L50,5 L45,12 L40,5 L35,22 L30,10 L25,20 L20,5 L15,15 L10,5 L5,18 L0,5 Z' fill='rgba(255,255,255,0.7)'/%3E%3C/svg%3E");
+            background-size: 150px 35px;
+            background-repeat: repeat-x;
+            filter: drop-shadow(0 5px 5px rgba(255,255,255,0.5));
             pointer-events: none;
+            z-index: 2;
         }
 
-        /* Снежинка в углу карточки */
-        .card::after {
-            content: '❄';
+        /* Снежинки внутри панели */
+        .glass-panel::after {
+            content: '❄ ❄ ❄';
             position: absolute;
-            top: 10px; right: 15px;
-            font-size: 24px;
-            color: rgba(255,255,255,0.3);
+            top: 50%; left: 50%; transform: translate(-50%, -50%);
+            font-size: 80px;
+            color: rgba(255, 255, 255, 0.05);
             pointer-events: none;
-            filter: drop-shadow(0 0 5px var(--accent));
+            z-index: 0;
+            white-space: nowrap;
+            letter-spacing: 20px;
         }
 
-        .profile-header { display: flex; align-items: center; justify-content: space-between; }
+        .section-title {
+            text-align: center; font-size: 22px; font-weight: 800;
+            margin-bottom: 20px; text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            color: var(--text-main); position: relative; z-index: 1;
+        }
+
+        /* ═══ КАРТОЧКИ ТОВАРОВ ═══ */
+        .item-card-glass {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 18px; margin-bottom: 12px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 18px;
+            box-shadow: inset 0 2px 5px rgba(255,255,255,0.1), 0 4px 15px rgba(0,0,0,0.2);
+            position: relative; z-index: 1;
+            text-decoration: none; color: var(--text-main);
+        }
+        .item-card-glass:last-child { margin-bottom: 0; }
+        
+        .item-title-glass { font-size: 18px; font-weight: 800; text-shadow: 0 1px 3px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 5px; }
+        .item-price-glass { color: var(--text-muted); font-size: 15px; margin-top: 4px; font-weight: 600; display: flex; align-items: center; gap: 5px; }
+
+        /* Декоративные снежинки рядом с текстом */
+        .item-title-glass::after { content: '❄'; font-size: 14px; opacity: 0.7; }
+        .item-price-glass::before { content: '❄'; font-size: 12px; opacity: 0.5; }
+
+        /* ═══ КНОПКИ "КУПИТЬ / ОТКРЫТЬ" (Хрустальные) ═══ */
+        .btn-ice {
+            background: linear-gradient(180deg, #e0f7fa 0%, #80d8ff 30%, #29b6f6 100%);
+            border: 2px solid #ffffff;
+            border-radius: 12px; color: #003366;
+            font-weight: 800; font-size: 16px; padding: 10px 24px;
+            cursor: pointer; 
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4), inset 0 2px 5px rgba(255,255,255,0.9), inset 0 -2px 5px rgba(0,0,0,0.2);
+            text-shadow: 0 1px 0 rgba(255,255,255,0.8);
+            transition: transform 0.1s, filter 0.2s;
+            font-family: 'Nunito', sans-serif;
+            position: relative; overflow: hidden; z-index: 2;
+        }
+        /* Блик на кнопке */
+        .btn-ice::before {
+            content: ''; position: absolute; top: 0; left: -50%; width: 200%; height: 50%;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.8), transparent);
+            transform: skewY(-15deg); pointer-events: none;
+        }
+        .btn-ice:active:not(:disabled) { transform: scale(0.95); }
+        .btn-ice:disabled { filter: grayscale(1); cursor: not-allowed; opacity: 0.6; }
+        .btn-ice.full-width { width: 100%; padding: 14px; font-size: 18px; margin-top: 10px; }
+
+        /* ═══ ОСТАЛЬНЫЕ ЭЛЕМЕНТЫ (Профиль, Топ и т.д.) ═══ */
+        .profile-header { display: flex; align-items: center; justify-content: space-between; position: relative; z-index: 1; }
         
         .avatar {
-            width: 100px; height: 100px; border-radius: 50%;
+            width: 90px; height: 90px; border-radius: 50%;
             background: linear-gradient(135deg, #1E3A8A, #00E5FF);
             display: flex; align-items: center; justify-content: center;
-            font-size: 36px; font-weight: 800; color: white;
-            border: 3px solid var(--accent); box-shadow: 0 0 15px var(--accent);
+            font-size: 32px; font-weight: 800; color: white;
+            border: 3px solid #ffffff; box-shadow: 0 0 15px rgba(0, 229, 255, 0.5);
             flex-shrink: 0; overflow: hidden;
-            position: relative; z-index: 1;
         }
         .avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
-
-        .avatar.vip-avatar {
-            border: 4px solid #FFD700;
-            box-shadow: 0 0 20px #FFD700, 0 0 40px rgba(255, 215, 0, 0.6), inset 0 0 15px #FFD700;
-        }
+        .avatar.vip-avatar { border: 4px solid #FFD700; box-shadow: 0 0 20px #FFD700; }
 
         .user-info { text-align: right; flex-grow: 1; margin-left: 15px; }
         .user-info h2 { margin: 0 0 4px 0; font-size: 24px; font-weight: 800; line-height: 1.2; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
@@ -133,83 +159,24 @@
             margin-top: 4px; margin-left: 4px; border: 1px solid rgba(0, 229, 255, 0.3);
         }
 
-        .finance-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .finance-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; position: relative; z-index: 1; }
         .finance-item { text-align: center; padding: 12px; background: rgba(0, 0, 0, 0.2); border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); }
         .finance-label { font-size: 14px; color: var(--text-muted); margin-bottom: 4px; font-weight: 800; }
         .finance-value { font-size: 22px; font-weight: 800; }
 
-        .stats-row { display: flex; justify-content: space-around; text-align: center; }
+        .stats-row { display: flex; justify-content: space-around; text-align: center; position: relative; z-index: 1; margin-top: 10px;}
         .stat-item { flex: 1; border-right: 1px solid rgba(255,255,255,0.1); }
         .stat-item:last-child { border-right: none; }
         .stat-value { font-size: 22px; font-weight: 800; color: var(--accent); }
         .stat-label { font-size: 13px; color: var(--text-muted); font-weight: 800; }
 
-        /* КНОПКИ (Общие) */
-        .btn {
-            padding: 12px 20px; background: var(--accent); color: #000;
-            border: none; border-radius: 12px; font-size: 15px; font-weight: 800;
-            font-family: inherit; cursor: pointer; box-shadow: 0 4px 15px rgba(0, 229, 255, 0.3);
-            transition: transform 0.1s, background 0.2s;
-            display: inline-block;
-            white-space: nowrap;
-        }
-        .btn:active:not(:disabled) { transform: scale(0.96); }
-        .btn:disabled { background: #4B5563; color: #9CA3AF; box-shadow: none; cursor: not-allowed; opacity: 0.7; }
-
         .progress-bar-bg { width: 100%; height: 12px; background: rgba(0,0,0,0.4); border-radius: 10px; overflow: hidden; margin-top: 8px; }
         .progress-bar-fill { height: 100%; background: var(--accent); border-radius: 10px; box-shadow: 0 0 10px var(--accent); }
 
-        .bottom-nav {
-            position: fixed; bottom: 0; left: 0; right: 0;
-            background: var(--nav-bg); 
-            backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
-            display: flex; justify-content: space-around; padding: 10px 0 25px;
-            border-top: 1px solid var(--card-border); 
-            box-shadow: 0 -4px 15px rgba(0,0,0,0.3); z-index: 100;
-        }
-        .nav-btn {
-            background: none; border: none; font-size: 11px; font-weight: 800;
-            color: var(--text-muted); display: flex; flex-direction: column; align-items: center;
-            gap: 4px; cursor: pointer; transition: color 0.3s;
-        }
-        .nav-btn.active { color: var(--accent); text-shadow: 0 0 10px var(--accent); }
-        .nav-btn span.icon { font-size: 22px; }
-
-        /* СТРОКИ В МАГАЗИНЕ / ИГРАХ */
-        .item-card {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 14px; background: rgba(0, 0, 0, 0.2); border-radius: 16px;
-            margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.1);
-            text-decoration: none; color: inherit;
-        }
-        .item-info { flex-grow: 1; margin-right: 10px; }
-        .item-info h4 { margin: 0 0 4px; font-size: 16px; }
-        .item-info p { margin: 0; font-size: 13px; color: var(--text-muted); }
-
-        /* ТОП */
-        .top-item { 
-            display: flex; align-items: center; gap: 10px; padding: 12px 10px; 
-            border-bottom: 1px solid rgba(255,255,255,0.1); border-radius: 12px;
-            transition: background 0.2s;
-        }
-        .top-item:last-child { border-bottom: none; }
-        .top-item.is-me { background: rgba(0, 229, 255, 0.1); border: 1px solid rgba(0, 229, 255, 0.3); }
-        .top-place { font-weight: 800; font-size: 18px; min-width: 25px; width: 25px; text-align: center; color: var(--accent); flex-shrink: 0; }
-        .top-avatar { 
-            width: 45px !important; height: 45px !important; min-width: 45px;
-            border-radius: 50%; background: #1E3A8A; display: flex; align-items: center; justify-content: center; 
-            overflow: hidden; font-weight: 800; color: #fff; flex-shrink: 0; position: relative; z-index: 1;
-            border: 2px solid rgba(255,255,255,0.2);
-        }
-        .top-avatar img { width: 100% !important; height: 100% !important; object-fit: cover; border-radius: 50%; }
-        .top-avatar.vip-avatar { border: 3px solid #FFD700; box-shadow: 0 0 15px #FFD700, 0 0 30px rgba(255, 215, 0, 0.6); }
-        .top-text-block { flex-grow: 1; min-width: 0; font-weight: 600; font-size: 14px; line-height: 1.3; word-break: break-word; }
-        .top-balance { font-weight: 800; color: var(--accent); margin-left: 10px; flex-shrink: 0; font-size: 15px; }
-
         /* КОЛЕСО */
-        .wheel-container { display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 10px; position: relative; }
+        .wheel-container { display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 10px; position: relative; z-index: 1;}
         .wheel {
-            width: 200px; height: 200px; border-radius: 50%;
+            width: 180px; height: 180px; border-radius: 50%;
             background: conic-gradient(
                 #00E5FF 0deg 51.4deg, #1E3A8A 51.4deg 102.8deg, #00E5FF 102.8deg 154.2deg, 
                 #1E3A8A 154.2deg 205.7deg, #00E5FF 205.7deg 257.1deg, #1E3A8A 257.1deg 308.5deg, #00E5FF 308.5deg 360deg
@@ -220,87 +187,73 @@
         .wheel-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 40px; height: 40px; background: #FFF; border-radius: 50%; box-shadow: 0 0 20px rgba(0,0,0,0.5); z-index: 10; }
         .wheel-arrow { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 20px solid var(--accent); z-index: 20; filter: drop-shadow(0 0 5px var(--accent)); }
 
+        /* ТОП */
+        .top-item { 
+            display: flex; align-items: center; gap: 10px; padding: 12px 10px; 
+            border-bottom: 1px solid rgba(255,255,255,0.1); border-radius: 12px;
+            transition: background 0.2s; position: relative; z-index: 1;
+        }
+        .top-item:last-child { border-bottom: none; }
+        .top-item.is-me { background: rgba(0, 229, 255, 0.1); border: 1px solid rgba(0, 229, 255, 0.3); }
+        .top-place { font-weight: 800; font-size: 18px; min-width: 25px; width: 25px; text-align: center; color: var(--accent); flex-shrink: 0; }
+        .top-avatar { 
+            width: 45px !important; height: 45px !important; min-width: 45px;
+            border-radius: 50%; background: #1E3A8A; display: flex; align-items: center; justify-content: center; 
+            overflow: hidden; font-weight: 800; color: #fff; flex-shrink: 0;
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+        .top-avatar img { width: 100% !important; height: 100% !important; object-fit: cover; border-radius: 50%; }
+        .top-avatar.vip-avatar { border: 3px solid #FFD700; box-shadow: 0 0 15px #FFD700; }
+        .top-text-block { flex-grow: 1; min-width: 0; font-weight: 600; font-size: 14px; line-height: 1.3; word-break: break-word; }
+        .top-balance { font-weight: 800; color: var(--accent); margin-left: 10px; flex-shrink: 0; font-size: 15px; }
+
+        /* НИЖНЕЕ МЕНЮ */
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: var(--nav-bg); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
+            display: flex; justify-content: space-around; padding: 10px 0 25px;
+            border-top: 1px solid rgba(168, 214, 255, 0.4); box-shadow: 0 -4px 15px rgba(0,0,0,0.3); z-index: 100;
+        }
+        .nav-btn {
+            background: none; border: none; font-size: 11px; font-weight: 800;
+            color: var(--text-muted); display: flex; flex-direction: column; align-items: center;
+            gap: 4px; cursor: pointer; transition: color 0.3s;
+        }
+        .nav-btn.active { color: var(--accent); text-shadow: 0 0 10px var(--accent); }
+        .nav-btn span.icon { font-size: 22px; }
+
         /* МОДАЛКА */
         .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); display: none; justify-content: center; align-items: center; z-index: 1000; }
-        .modal-content { background: var(--card-bg); border: 1px solid var(--accent); padding: 30px; border-radius: 24px; text-align: center; width: 85%; max-width: 340px; box-shadow: 0 0 30px rgba(0, 229, 255, 0.3); transform: scale(0.9); transition: transform 0.3s ease; }
+        .modal-content { 
+            background: linear-gradient(135deg, rgba(200, 230, 255, 0.2) 0%, rgba(100, 150, 255, 0.1) 100%);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--accent); padding: 30px; border-radius: 24px; text-align: center; 
+            width: 85%; max-width: 340px; box-shadow: 0 0 30px rgba(0, 229, 255, 0.3); 
+            transform: scale(0.9); transition: transform 0.3s ease; 
+        }
         .modal-overlay.show .modal-content { transform: scale(1); }
         .case-grid { font-size: 32px; line-height: 1.5; margin: 15px 0; }
         .casino-slots { font-size: 40px; margin: 20px 0; display: flex; justify-content: space-around;}
 
         /* ПРАВИЛА */
-        .rules-tabs { display: flex; gap: 10px; margin-bottom: 20px; }
-        .rules-tab { flex: 1; padding: 12px; text-align: center; font-weight: 800; font-size: 15px; background: rgba(0,0,0,0.2); border-radius: 16px; cursor: pointer; border: 1px solid var(--card-border); transition: all 0.2s; color: var(--text-main); }
-        .rules-tab.active { background: var(--accent); color: #000; box-shadow: 0 4px 15px rgba(0, 229, 255, 0.3); }
-        .rule-content { display: none; }
+        .rules-tabs { display: flex; gap: 10px; margin-bottom: 20px; position: relative; z-index: 1; }
+        .rules-tab { 
+            flex: 1; padding: 12px; text-align: center; font-weight: 800; font-size: 15px; 
+            background: rgba(0,0,0,0.2); border-radius: 16px; cursor: pointer; 
+            border: 1px solid rgba(168, 214, 255, 0.4); transition: all 0.2s; color: var(--text-main); 
+        }
+        .rules-tab.active { background: linear-gradient(135deg, #a1e3ff 0%, #64b5f6 100%); color: #0d47a1; box-shadow: 0 4px 15px rgba(0, 229, 255, 0.3); }
+        .rule-content { display: none; position: relative; z-index: 1; }
         .rule-content.active { display: block; }
-        .rule-header { color: var(--accent); font-size: 18px; font-weight: 800; margin-top: 25px; margin-bottom: 10px; border-bottom: 1px solid var(--card-border); padding-bottom: 8px; }
+        .rule-header { color: var(--accent); font-size: 18px; font-weight: 800; margin-top: 25px; margin-bottom: 10px; border-bottom: 1px solid rgba(168, 214, 255, 0.3); padding-bottom: 8px; }
         .rule-list { margin: 0; padding-left: 20px; color: var(--text-main); font-size: 15px; line-height: 1.6; }
         .rule-list li { margin-bottom: 10px; }
         .rule-list li::marker { color: var(--accent); }
-        .memo-box { margin-top: 25px; padding: 15px; background: rgba(0, 0, 0, 0.2); border-radius: 16px; border: 1px solid var(--card-border); }
+        .memo-box { margin-top: 25px; padding: 15px; background: rgba(0, 0, 0, 0.2); border-radius: 16px; border: 1px solid rgba(168, 214, 255, 0.3); }
         .memo-box h3 { margin-top: 0; color: #FFD700; font-size: 16px; }
         .memo-box p { margin: 5px 0; font-size: 14px; color: var(--text-muted); }
         .neon-title { margin-top: 0; font-size: 26px; font-weight: 800; text-align: center; background: linear-gradient(90deg, #00E5FF, #FFFFFF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 5px; filter: drop-shadow(0 0 8px rgba(0, 229, 255, 0.6)); }
         .subtitle { text-align: center; color: var(--text-muted); font-size: 14px; margin-top: 0; margin-bottom: 25px; }
-
-        /* ═══ СТИЛИ ДЛЯ ЛЕДЯНЫХ КАРТОЧЕК (Новая вкладка Игры) ═══ */
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 20px;
-            padding: 15px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3), inset 0 0 10px rgba(255,255,255,0.1);
-            position: relative;
-            overflow: hidden;
-            margin-bottom: 15px;
-        }
-
-        .glass-panel::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; height: 15px;
-            background: linear-gradient(to bottom, rgba(255,255,255,0.8), transparent);
-            mask-image: repeating-linear-gradient(to right, black 0%, black 10%, transparent 10%, transparent 15%);
-            -webkit-mask-image: repeating-linear-gradient(to right, black 0%, black 10%, transparent 10%, transparent 15%);
-            opacity: 0.7;
-        }
-
-        .section-title {
-            text-align: center; font-size: 20px; font-weight: 800;
-            margin-bottom: 15px; text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-            display: flex; align-items: center; justify-content: center; gap: 10px;
-            padding: 5px 0; color: var(--text-main);
-        }
-
-        .item-card-glass {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 12px 15px; margin-bottom: 10px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 15px;
-            box-shadow: inset 0 0 15px rgba(255,255,255,0.05);
-            text-decoration: none; color: var(--text-main);
-        }
-        .item-card-glass:last-child { margin-bottom: 0; }
-        
-        .item-title-glass { font-size: 16px; font-weight: 800; text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
-        .item-price-glass { color: var(--text-muted); font-size: 13px; margin-top: 4px; font-weight: 600; }
-
-        .btn-ice {
-            background: linear-gradient(135deg, #a1e3ff 0%, #64b5f6 50%, #2196f3 100%);
-            border: 2px solid #e1f5fe;
-            border-radius: 12px; color: #0d47a1;
-            font-weight: 800; font-size: 14px; padding: 8px 20px;
-            cursor: pointer; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2), inset 0 2px 5px rgba(255,255,255,0.8), inset 0 -2px 5px rgba(0,0,0,0.2);
-            text-shadow: 0 1px 0 rgba(255,255,255,0.5);
-            transition: transform 0.1s, filter 0.2s;
-            font-family: 'Nunito', sans-serif;
-            white-space: nowrap;
-        }
-        .btn-ice:active:not(:disabled) { transform: scale(0.95); }
-        .btn-ice:disabled { filter: grayscale(1); cursor: not-allowed; opacity: 0.6; }
     </style>
 </head>
 <body>
@@ -309,11 +262,14 @@
     <div class="overlay"></div>
     <div class="snow" id="snow"></div>
 
+    <!-- ЭКРАН ПРОФИЛЯ -->
     <div id="screen-profile" class="app-container">
-        <div style="color:var(--text-muted); text-align:center; margin-top:50px; font-weight: 800;">Загрузка... ❄️</div>
+        <div class="glass-panel" style="text-align:center; padding: 40px 15px;">
+            <div style="color:var(--text-muted); font-weight: 800;">Загрузка... ❄️</div>
+        </div>
     </div>
     
-    <!-- ЭКРАН ИГР (Новый дизайн) -->
+    <!-- ЭКРАН ИГР (Ледяной дизайн как на фото) -->
     <div id="screen-games" class="app-container" style="display: none;">
         <div class="glass-panel">
             <div class="section-title"><span>👑</span> VIP Подписка</div>
@@ -331,7 +287,7 @@
 
         <div class="glass-panel">
             <div class="section-title"><span>🎰</span> Казино</div>
-            <div style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 10px;">
+            <div style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 10px; position: relative; z-index: 1;">
                 <button class="btn-ice" onclick="playCasino(1000, this)" style="width: 30%; padding: 10px; font-size: 14px;">1к</button>
                 <button class="btn-ice" onclick="playCasino(5000, this)" style="width: 30%; padding: 10px; font-size: 14px;">5к</button>
                 <button class="btn-ice" onclick="playCasino(10000, this)" style="width: 30%; padding: 10px; font-size: 14px;">10к</button>
@@ -341,40 +297,56 @@
         </div>
     </div>
     
+    <!-- ЭКРАН ТОПА -->
     <div id="screen-top" class="app-container" style="display: none;">
-        <div class="card" style="text-align: center;"><h2 style="margin-top:0;">🏆 Топ богачей</h2></div>
-        <div id="top-list" class="card"></div>
+        <div class="glass-panel">
+            <div class="section-title"><span>🏆</span> Топ богачей</div>
+            <div id="top-list"></div>
+        </div>
     </div>
     
+    <!-- ЭКРАН МАГАЗИНА -->
     <div id="screen-shop" class="app-container" style="display: none;">
-        <div class="card"><h2 style="margin-top:0; text-align:center;">⭐ Покупка msg</h2><div id="stars-list"></div></div>
-        <div class="card"><h2 style="margin-top:0; text-align:center;">👑 Покупка VIP</h2>
-            <div class="item-card" onclick="buyVipStars()">
-                <div class="item-info"><h4>VIP на 7 дней</h4><p>Ускоренный доход, защита от варнов</p></div>
-                <div style="font-weight: 800; color: #e6a817; white-space: nowrap;">10 ⭐</div>
+        <div class="glass-panel">
+            <div class="section-title"><span>⭐</span> Покупка msg</div>
+            <div id="stars-list"></div>
+        </div>
+        <div class="glass-panel">
+            <div class="section-title"><span>👑</span> Покупка VIP</div>
+            <div class="item-card-glass" onclick="buyVipStars()">
+                <div class="item-info">
+                    <div class="item-title-glass">VIP на 7 дней</div>
+                    <div class="item-price-glass">Ускоренный доход, защита</div>
+                </div>
+                <div style="font-weight: 800; color: #ffd700;">10 ⭐</div>
             </div>
         </div>
-        <div class="card"><h2 style="margin-top:0;">🔗 Ссылки</h2>
-            <a href="https://t.me/Amina_updates" target="_blank" class="item-card"><div class="item-info"><h4>📢 Канал</h4></div></a>
-            <a href="https://t.me/chat_games_Gojo" target="_blank" class="item-card"><div class="item-info"><h4>💬 Группа</h4></div></a>
+        <div class="glass-panel">
+            <div class="section-title"><span>🔗</span> Ссылки</div>
+            <a href="https://t.me/Amina_updates" target="_blank" class="item-card-glass">
+                <div class="item-info"><div class="item-title-glass">📢 Канал</div></div>
+            </a>
+            <a href="https://t.me/chat_games_Gojo" target="_blank" class="item-card-glass">
+                <div class="item-info"><div class="item-title-glass">💬 Группа</div></div>
+            </a>
         </div>
     </div>
 
+    <!-- ЭКРАН НАСТРОЕК -->
     <div id="screen-settings" class="app-container" style="display: none;">
-        <div class="card" style="text-align: center;">
-            <h2 style="margin-top:0;">⚙️ Настройки</h2>
-            <p style="color:var(--text-muted); font-size:14px; margin-bottom: 0;">Управление интерфейсом</p>
+        <div class="glass-panel">
+            <div class="section-title"><span>⚙️</span> Настройки</div>
+            <p style="color:var(--text-muted); font-size:14px; text-align:center; margin-top:0;">Управление интерфейсом</p>
+            <button class="btn-ice full-width" onclick="switchTab('rules')">📜 Правила бота и группы</button>
         </div>
-        <div class="card">
-            <button class="btn" style="width: 100%;" onclick="switchTab('rules')">📜 Правила бота и группы</button>
-        </div>
-        <div class="card" style="text-align: center; padding: 20px;">
-            <p style="color:var(--text-muted); font-size:13px; margin: 0;">Версия приложения: 1.3.1 ❄️</p>
+        <div class="glass-panel" style="text-align: center; padding: 20px;">
+            <p style="color:var(--text-muted); font-size:13px; margin: 0;">Версия приложения: 2.0.0 ❄️</p>
         </div>
     </div>
 
+    <!-- ЭКРАН ПРАВИЛ -->
     <div id="screen-rules" class="app-container" style="display: none;">
-        <div class="card">
+        <div class="glass-panel">
             <div class="rules-tabs">
                 <div class="rules-tab active" onclick="switchRules('bot', this)">🤖 Бот</div>
                 <div class="rules-tab" onclick="switchRules('group', this)">💬 Группа</div>
@@ -391,30 +363,11 @@
                 </ul>
                 <div class="rule-header">2. Экономика и валюта (msg)</div>
                 <ul class="rule-list">
-                    <li>Запрещено использование любых багов, дыр в коде или сторонних скриптов для накрутки валюты. За найденный баг и сообщение о нем администрация может выдать награду.</li>
-                    <li>Все подарки (/gift), переводы, ставки в дуэлях и казино совершаются добровольно. Возврат средств по причине «я случайно нажал» или «он не захотел возвращать» не производится.</li>
-                    <li>Ограбления (/rob) являются игровой механикой. Жалобы на успешное ограбление модерацией не рассматриваются.</li>
-                </ul>
-                <div class="rule-header">3. Социальное взаимодействие</div>
-                <ul class="rule-list">
-                    <li>Предложение брака (/marry) должно быть обоюдным. Обман партнера ради завладения общим бюджетом с последующим разводом расценивается как мошенничество и карается баном.</li>
-                    <li>Анонимные сообщения (/anon) не должны содержать оскорблений, угроз, контента 18+ и рекламы. При нарушении доступ к анонимкам может быть заблокирован навсегда.</li>
-                </ul>
-                <div class="rule-header">4. Дуэли и Игры</div>
-                <ul class="rule-list">
-                    <li>Договорные матчи в дуэлях (слив ставок намеренно) запрещены. Игра должна проходить честно.</li>
-                    <li>Запрещено использование стороннего программного обеспечения (автокликеров, макросов) для обхода кулдаунов в казино или кейсах.</li>
-                </ul>
-                <div class="rule-header">5. Система наказаний</div>
-                <ul class="rule-list">
-                    <li>⚠️ <b>Варн (предупреждение):</b> Выдается за мелкие нарушения. При накоплении 3-х варнов автоматически выдается бан на 7 дней.</li>
-                    <li>🚫 <b>Бан:</b> Выдается за серьезные нарушения (мошенничество, обход правил, агрессия). Срок может составлять от 1 дня до пожизненного.</li>
-                    <li>🗑️ <b>Удаление аккаунта:</b> Применяется к злостным читерам и нарушителям без права восстановления профиля.</li>
+                    <li>Запрещено использование любых багов, дыр в коде или сторонних скриптов для накрутки валюты.</li>
+                    <li>Все подарки (/gift), переводы, ставки в дуэлях и казино совершаются добровольно. Возврат средств по причине «я случайно нажал» не производится.</li>
                 </ul>
                 <div class="memo-box">
                     <h3>📌 Памятка</h3>
-                    <p>• Незнание правил не освобождает от ответственности.</p>
-                    <p>• Если вы увидели нарушителя — нажмите кнопку «Пожаловаться» (в анонимках) или напишите модератору.</p>
                     <p>• Администрация всегда права. Решения модераторов не обсуждаются в общем чате.</p>
                 </div>
             </div>
@@ -429,38 +382,23 @@
                 </ul>
                 <div class="rule-header">2. Контент</div>
                 <ul class="rule-list">
-                    <li>Строго запрещена публикация контента 18+ (порнография), шок-контента (сцены насилия) и призывов к экстремизму.</li>
-                    <li>Реклама сторонних ресурсов, ботов, чатов и каналов разрешена только с личного согласия владельца проекта — <b>@Kaoruko_off</b>.</li>
+                    <li>Строго запрещена публикация контента 18+, шок-контента и призывов к экстремизму.</li>
                 </ul>
-                <div class="rule-header">3. Конфликты</div>
-                <ul class="rule-list">
-                    <li>Решайте личные конфликты в личных сообщениях. Публичные разборки будут пресекаться модераторами.</li>
-                    <li>Не обсуждайте действия администрации в общем чате. Для этого есть ЛС владельца или модераторов.</li>
-                </ul>
-                <div class="rule-header">4. Наказания в группе</div>
-                <ul class="rule-list">
-                    <li>🔇 <b>Мут:</b> Выдается за флуд, спам или чрезмерную нецензурную лексику. Срок: от 1 часа до 24 часов.</li>
-                    <li>🚫 <b>Бан:</b> Выдается за агрессию, рекламу, повторное нарушение правил после мута. Срок: от 1 дня до навсегда.</li>
-                </ul>
-                <div class="memo-box">
-                    <h3>📌 Памятка</h3>
-                    <p>• Незнание правил не освобождает от ответственности.</p>
-                    <p>• Если вы увидели нарушителя — нажмите кнопку «Пожаловаться» (в анонимках) или напишите модератору.</p>
-                    <p>• Администрация всегда права. Решения модераторов не обсуждаются в общем чате.</p>
-                </div>
             </div>
         </div>
     </div>
 
+    <!-- МОДАЛКА -->
     <div id="modal" class="modal-overlay">
         <div class="modal-content">
             <h3 id="modal-title" style="margin-top:0;">Крутим...</h3>
             <div id="modal-body" class="case-grid"></div>
             <p id="modal-desc" style="font-weight: 600;"></p>
-            <button id="modal-btn" class="btn" style="display:none; margin-top: 10px; width: 100%;" onclick="closeModal()">ОК</button>
+            <button id="modal-btn" class="btn-ice full-width" style="display:none; margin-top: 10px;" onclick="closeModal()">ОК</button>
         </div>
     </div>
 
+    <!-- НИЖНЕЕ МЕНЮ -->
     <div class="bottom-nav">
         <button class="nav-btn active" id="nav-profile" onclick="switchTab('profile', this)"><span class="icon">👤</span> Профиль</button>
         <button class="nav-btn" id="nav-games" onclick="switchTab('games', this)"><span class="icon">🎮</span> Игры</button>
@@ -475,6 +413,7 @@
         const API_URL = 'https://bot-1793434826-8925-ayzen.bothost.tech';
         let myUserId = null;
 
+        // ─── СНЕГОПАД ───
         function createSnow() {
             const snowContainer = document.getElementById('snow');
             const snowflake = document.createElement('div');
@@ -489,6 +428,7 @@
         }
         setInterval(createSnow, 200);
 
+        // ─── ВКЛАДКИ ───
         let currentTabIndex = 0;
         const tabs = ['profile', 'games', 'top', 'shop', 'settings', 'rules'];
 
@@ -517,8 +457,8 @@
                 if (settingsBtn && tabId === 'rules') settingsBtn.classList.add('active');
             }
 
-            if(tabId === 'games') loadShopItems(); // <-- НОВАЯ ЛОГИКА
-            if(tabId === 'shop') renderStarsShop(); // <-- Переименовал
+            if(tabId === 'games') loadShopItems();
+            if(tabId === 'shop') renderStarsShop();
             if(tabId === 'top') loadTop();
 
             currentTabIndex = newIndex;
@@ -533,6 +473,7 @@
             tg.HapticFeedback.impactOccurred('light');
         }
 
+        // ─── ПРОФИЛЬ ───
         async function loadProfile() {
             try {
                 const response = await fetch(`${API_URL}/api/profile`, { headers: { 'X-Telegram-Init-Data': tg.initData } });
@@ -541,7 +482,7 @@
                 myUserId = data.user_id;
                 renderProfile(data);
             } catch (error) {
-                document.getElementById('screen-profile').innerHTML = `<div class="card" style="text-align: center; color: #FF6B6B;">Ошибка: ${error.message}</div>`;
+                document.getElementById('screen-profile').innerHTML = `<div class="glass-panel" style="text-align: center; color: #FF6B6B;">Ошибка: ${error.message}</div>`;
             }
         }
 
@@ -553,7 +494,6 @@
             if (data.vip) avatarClass += " vip-avatar";
 
             let vipLine = data.vip ? `<div class="status-badge" style="background:#FFD700; color:#000;">👑 VIP: ${data.vip_days} дн.</div>` : '';
-            
             let idLine = `<div class="status-badge">ID: ${data.custom_id}</div>`;
             
             let regDate = '—';
@@ -568,19 +508,19 @@
             let wheelHtml = '';
             if (data.daily_available) {
                 wheelHtml = `
-                    <div class="card" style="text-align:center;">
+                    <div class="glass-panel" style="text-align:center; margin-top: 15px;">
                         <div class="wheel-container">
                             <div class="wheel-arrow"></div>
                             <div class="wheel" id="wheel"></div>
                             <div class="wheel-center"></div>
                         </div>
-                        <button class="btn" style="width: 100%;" onclick="spinWheel(this)" id="wheel-btn" style="margin-top: 20px;">Крутить колесо</button>
+                        <button class="btn-ice full-width" onclick="spinWheel(this)" id="wheel-btn" style="margin-top: 20px;">Крутить колесо</button>
                     </div>
                 `;
             } else {
                 const percent = ((24 - data.daily_hours_left) / 24) * 100;
                 wheelHtml = `
-                    <div class="card" style="text-align: center;">
+                    <div class="glass-panel" style="text-align: center; margin-top: 15px;">
                         <div style="font-weight: 800;">🎁 Следующее колесо через ${data.daily_hours_left} ч.</div>
                         <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: ${percent}%"></div></div>
                     </div>
@@ -588,24 +528,29 @@
             }
 
             document.getElementById('screen-profile').innerHTML = `
-                <div class="card profile-header">
-                    <div class="${avatarClass}">${avatarContent}</div>
-                    <div class="user-info">
-                        <h2>${data.name}</h2>
-                        <div class="level">Уровень ${data.level}: ${data.level_title}</div>
-                        <div>${idLine} ${vipLine}</div>
-                        <div>${marriageHtml}</div>
-                        ${regLine}
+                <div class="glass-panel">
+                    <div class="profile-header">
+                        <div class="${avatarClass}">${avatarContent}</div>
+                        <div class="user-info">
+                            <h2>${data.name}</h2>
+                            <div class="level">Уровень ${data.level}: ${data.level_title}</div>
+                            <div>${idLine} ${vipLine}</div>
+                            <div>${marriageHtml}</div>
+                            ${regLine}
+                        </div>
                     </div>
                 </div>
-                <div class="card"><div class="finance-grid">
-                    <div class="finance-item"><div class="finance-label">👛 Кошелек</div><div class="finance-value">${data.balance.toLocaleString()}</div></div>
-                    <div class="finance-item"><div class="finance-label">🏦 Банк</div><div class="finance-value">${data.bank_balance.toLocaleString()}</div></div>
-                </div></div>
-                <div class="card stats-row">
-                    <div class="stat-item"><div class="stat-value">#${data.rank}</div><div class="stat-label">🏆 Топ</div></div>
-                    <div class="stat-item"><div class="stat-value">${data.rep}</div><div class="stat-label">⭐ Реп</div></div>
-                    <div class="stat-item"><div class="stat-value">${data.streak}/7</div><div class="stat-label">🔥 Стрик</div></div>
+                
+                <div class="glass-panel">
+                    <div class="finance-grid">
+                        <div class="finance-item"><div class="finance-label">👛 Кошелек</div><div class="finance-value">${data.balance.toLocaleString()}</div></div>
+                        <div class="finance-item"><div class="finance-label">🏦 Банк</div><div class="finance-value">${data.bank_balance.toLocaleString()}</div></div>
+                    </div>
+                    <div class="stats-row">
+                        <div class="stat-item"><div class="stat-value">#${data.rank}</div><div class="stat-label">🏆 Топ</div></div>
+                        <div class="stat-item"><div class="stat-value">${data.rep}</div><div class="stat-label">⭐ Реп</div></div>
+                        <div class="stat-item"><div class="stat-value">${data.streak}/7</div><div class="stat-label">🔥 Стрик</div></div>
+                    </div>
                 </div>
                 ${wheelHtml}
             `;
@@ -634,6 +579,50 @@
             } catch(e) { tg.showAlert('Ошибка сети'); btn.disabled = false; btn.innerText = 'Крутить колесо'; }
         }
 
+        // ─── ИГРЫ ───
+        async function loadShopItems() {
+            try {
+                const response = await fetch(`${API_URL}/api/shop_items`, { headers: { 'X-Telegram-Init-Data': tg.initData } });
+                if (!response.ok) throw new Error('Ошибка сети');
+                const data = await response.json();
+                
+                // Рендер VIP
+                let vipHtml = '';
+                data.vip.forEach(pkg => {
+                    vipHtml += `
+                        <div class="item-card-glass">
+                            <div class="item-info">
+                                <div class="item-title-glass">${pkg.title} ❄️</div>
+                                <div class="item-price-glass">${pkg.desc}</div>
+                            </div>
+                            <button class="btn-ice" onclick="buyVip(${pkg.weeks})">Купить</button>
+                        </div>
+                    `;
+                });
+                document.getElementById('vip-list-container').innerHTML = vipHtml;
+
+                // Рендер Кейсов
+                let casesHtml = '';
+                data.cases.forEach(c => {
+                    casesHtml += `
+                        <div class="item-card-glass">
+                            <div class="item-info">
+                                <div class="item-title-glass">${c.name}</div>
+                                <div class="item-price-glass">${c.price.toLocaleString()} msg</div>
+                            </div>
+                            <button class="btn-ice" onclick="openCase('${c.id}')">Открыть</button>
+                        </div>
+                    `;
+                });
+                document.getElementById('cases-list-container').innerHTML = casesHtml;
+
+            } catch(e) {
+                document.getElementById('vip-list-container').innerHTML = `<div style="text-align:center; color:#FF6B6B;">Ошибка загрузки</div>`;
+                document.getElementById('cases-list-container').innerHTML = `<div style="text-align:center; color:#FF6B6B;">Ошибка загрузки</div>`;
+            }
+        }
+
+        // ─── ТОП ───
         async function loadTop() {
             const container = document.getElementById('top-list');
             container.innerHTML = '<div style="text-align:center; padding:20px; color:var(--text-muted);">Загрузка топа... 🏆</div>';
@@ -670,10 +659,25 @@
                 });
                 container.innerHTML = html;
             } catch(e) { 
-                container.innerHTML = '<div style="color:#FF6B6B; text-align:center; padding:20px;">Ошибка загрузки топа. Проверьте API.</div>'; 
+                container.innerHTML = '<div style="color:#FF6B6B; text-align:center; padding:20px;">Ошибка загрузки топа.</div>'; 
             }
         }
 
+        // ─── МАГАЗИН (Звёзды) ───
+        function renderStarsShop() {
+            const starsPkgs = [{msg: "1 000", stars: 1}, {msg: "5 000", stars: 5}, {msg: "110 000", stars: 100}, {msg: "230 000", stars: 200}, {msg: "600 000", stars: 500}, {msg: "1 000 000", stars: 1000}];
+            let starsHtml = '';
+            starsPkgs.forEach(p => { 
+                starsHtml += `
+                <div class="item-card-glass" onclick="buyStars(${p.stars})">
+                    <div class="item-info"><div class="item-title-glass">${p.msg} msg</div></div>
+                    <div style="font-weight: 800; color: #ffd700;">${p.stars} ⭐</div>
+                </div>`; 
+            });
+            document.getElementById('stars-list').innerHTML = starsHtml;
+        }
+
+        // ─── МОДАЛКА ───
         function showModalResult(title, bodyHtml, descHtml, btnText = "ОК") {
             const modal = document.getElementById('modal');
             document.getElementById('modal-title').innerText = title;
@@ -694,61 +698,7 @@
             setTimeout(() => { modal.style.display = 'none'; }, 300); 
         }
 
-        // ═══ НОВАЯ ЛОГИКА ДЛЯ ИГР ═══
-        async function loadShopItems() {
-            try {
-                const response = await fetch(`${API_URL}/api/shop_items`, { headers: { 'X-Telegram-Init-Data': tg.initData } });
-                if (!response.ok) throw new Error('Ошибка сети');
-                const data = await response.json();
-                
-                let vipHtml = '';
-                data.vip.forEach(pkg => {
-                    vipHtml += `
-                        <div class="item-card-glass">
-                            <div class="item-info">
-                                <div class="item-title-glass">${pkg.title} ❄️</div>
-                                <div class="item-price-glass">${pkg.desc}</div>
-                            </div>
-                            <button class="btn-ice" onclick="buyVip(${pkg.weeks})">Купить</button>
-                        </div>
-                    `;
-                });
-                document.getElementById('vip-list-container').innerHTML = vipHtml;
-
-                let casesHtml = '';
-                data.cases.forEach(c => {
-                    casesHtml += `
-                        <div class="item-card-glass">
-                            <div class="item-info">
-                                <div class="item-title-glass">${c.name}</div>
-                                <div class="item-price-glass">${c.price.toLocaleString()} msg</div>
-                            </div>
-                            <button class="btn-ice" onclick="openCase('${c.id}')">Открыть</button>
-                        </div>
-                    `;
-                });
-                document.getElementById('cases-list-container').innerHTML = casesHtml;
-
-            } catch(e) {
-                document.getElementById('vip-list-container').innerHTML = `<div style="text-align:center; color:var(--danger);">Ошибка загрузки</div>`;
-                document.getElementById('cases-list-container').innerHTML = `<div style="text-align:center; color:var(--danger);">Ошибка загрузки</div>`;
-            }
-        }
-
-        // ═══ МАГАЗИН (Звёзды) ═══
-        function renderStarsShop() {
-            const starsPkgs = [{msg: "1 000", stars: 1}, {msg: "5 000", stars: 5}, {msg: "110 000", stars: 100}, {msg: "230 000", stars: 200}, {msg: "600 000", stars: 500}, {msg: "1 000 000", stars: 1000}];
-            let starsHtml = '';
-            starsPkgs.forEach(p => { 
-                starsHtml += `
-                <div class="item-card" onclick="buyStars(${p.stars})">
-                    <div class="item-info"><h4>${p.msg} msg</h4></div>
-                    <div style="font-weight: 800; color: #e6a817; white-space: nowrap;">${p.stars} ⭐</div>
-                </div>`; 
-            });
-            document.getElementById('stars-list').innerHTML = starsHtml;
-        }
-
+        // ─── ПОКУПКИ ───
         async function buyVip(weeks) {
             try {
                 const res = await fetch(`${API_URL}/api/buy_vip`, { method: 'POST', headers: { 'X-Telegram-Init-Data': tg.initData, 'Content-Type': 'application/json' }, body: JSON.stringify({ weeks: weeks }) });
@@ -776,6 +726,19 @@
             } catch(e) { showModalResult('❌ Ошибка сети', '📡', 'Попробуйте позже'); }
         }
 
+        async function buyStars(stars) {
+            try {
+                const res = await fetch(`${API_URL}/api/buy_stars`, { method: 'POST', headers: { 'X-Telegram-Init-Data': tg.initData, 'Content-Type': 'application/json' }, body: JSON.stringify({ stars: stars }) });
+                const data = await res.json();
+                if (data.success) {
+                    tg.openInvoice(data.link, (status) => {
+                        if (status === 'paid') { tg.HapticFeedback.notificationOccurred('success'); setTimeout(() => loadProfile(), 2000); }
+                    });
+                } else showModalResult('❌ Ошибка', '😢', data.error);
+            } catch(e) { showModalResult('❌ Ошибка сети', '📡', 'Попробуйте позже'); }
+        }
+
+        // ─── ИГРЫ (Кейс / Казино) ───
         async function openCase(caseId) {
             const modal = document.getElementById('modal'); 
             const title = document.getElementById('modal-title'); 
@@ -859,19 +822,8 @@
             } catch(e) { clearInterval(spin); showModalResult('❌ Ошибка', '📡', 'Нет связи с сервером'); btn.disabled = false; }
         }
 
-        async function buyStars(stars) {
-            try {
-                const res = await fetch(`${API_URL}/api/buy_stars`, { method: 'POST', headers: { 'X-Telegram-Init-Data': tg.initData, 'Content-Type': 'application/json' }, body: JSON.stringify({ stars: stars }) });
-                const data = await res.json();
-                if (data.success) {
-                    tg.openInvoice(data.link, (status) => {
-                        if (status === 'paid') { tg.HapticFeedback.notificationOccurred('success'); setTimeout(() => loadProfile(), 2000); }
-                    });
-                } else showModalResult('❌ Ошибка', '😢', data.error);
-            } catch(e) { showModalResult('❌ Ошибка сети', '📡', 'Попробуйте позже'); }
-        }
-
+        // ─── СТАРТ ───
         loadProfile();
     </script>
 </body>
-    </html>
+                                                                                    </html>
